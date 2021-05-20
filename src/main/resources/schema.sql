@@ -1,0 +1,1 @@
+-- CREATE SCHEMA `tenet-db` DEFAULT CHARACTER SET utf16 ;

@@ -33,11 +33,11 @@ public class BaseDomain implements Serializable {
 
 	@Column(name = "created_by_user", nullable = false)
 	@CreatedBy
-	private String createdByUser;
+	private String createdByUser ="DUMMY_USER";
 
 	@Column(name = "updated_by_user", nullable = false)
 	@LastModifiedBy
-	private String updatedByUser;
+	private String updatedByUser = "DUMMY_USER";
 
 	@Column(name = "is_deleted")
 	private boolean isDeleted;

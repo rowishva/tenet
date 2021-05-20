@@ -15,7 +15,7 @@
 	<name>booking</name>
 	<description>Backend application for booking slot in church</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>8</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
