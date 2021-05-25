@@ -35,7 +35,7 @@ public class BaseDomain implements Serializable {
 	@CreatedBy
 	private String createdByUser ="DUMMY_USER";
 
-	@Column(name = "updated_by_user", nullable = false)
+	@Column(name = "updated_by_user")
 	@LastModifiedBy
 	private String updatedByUser = "DUMMY_USER";
 
@@ -49,11 +49,13 @@ public class BaseDomain implements Serializable {
 	@PrePersist
 	public void onPrePersist() {
 		this.createTime = new Date();
+		this.createdByUser = "Dummy Created";
 	}
 
 	@PreUpdate
 	public void onPreUpdate() {
 		this.updateTime = new Date();
+		this.updatedByUser = "Dummy Updated";
 	}
 
 	public Date getCreateTime() {

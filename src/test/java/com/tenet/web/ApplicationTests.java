@@ -1,10 +1,10 @@
-package com.tenet.booking;
+package com.tenet.web;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class BookingApplicationTests {
+class ApplicationTests {
 
 	@Test
 	void contextLoads() {

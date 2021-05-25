@@ -8,4 +8,5 @@ import com.tenet.web.rest.common.entity.AdminUserRole;
 @Repository
 public interface AdminUserRoleRepository extends JpaRepository<AdminUserRole, Long> {
 
+	AdminUserRole findByRoleCode(String roleCode);
 }

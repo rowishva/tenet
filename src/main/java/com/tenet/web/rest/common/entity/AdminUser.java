@@ -10,8 +10,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Where;
+
 @Entity
 @Table(name = "admin_user")
+@Where(clause = "is_deleted=0")
 public class AdminUser extends BaseDomain {
 
 	private static final long serialVersionUID = 1L;
@@ -21,21 +24,20 @@ public class AdminUser extends BaseDomain {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id = 0;
 
-	@Column(name = "user_name")
+	@Column(name = "user_name", length=12, nullable=false)
 	private String username = "";
 
-	@Column(name = "first_name")
+	@Column(name = "first_name", length=50, nullable=false)
 	private String firstName = "";
 
-	@Column(name = "last_name")
+	@Column(name = "last_name", length=50, nullable=false)
 	private String lastName = "";
 
 	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "role_id")
 	private AdminUserRole roleId = null;
 
-	@Column(name = "email")
-	// FIXME@Email()
+	@Column(name = "email", length=30, nullable=false)
 	private String email = "";
 
 	public long getId() {

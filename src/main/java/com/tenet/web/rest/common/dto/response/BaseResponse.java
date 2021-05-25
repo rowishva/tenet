@@ -1,8 +1,12 @@
 package com.tenet.web.rest.common.dto.response;
 
 import java.io.Serializable;
+import java.util.List;
 
-public class BaseResponse implements Serializable {
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class BaseResponse<T> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -10,12 +14,20 @@ public class BaseResponse implements Serializable {
 
 	private String message;
 
-	private Object response;
+	private T response;
 
-	public BaseResponse(int status, String message, Object response) {
+	private List<T> responseList;
+
+	public BaseResponse(int status, String message, T response) {
 		this.status = status;
 		this.message = message;
 		this.response = response;
+	}
+	
+	public BaseResponse(int status, String message, List<T> responseList) {
+		this.status = status;
+		this.message = message;
+		this.responseList = responseList;
 	}
 
 	public BaseResponse(int status, String message) {
@@ -42,12 +54,20 @@ public class BaseResponse implements Serializable {
 		this.message = message;
 	}
 
-	public Object getResponse() {
+	public T getResponse() {
 		return response;
 	}
 
-	public void setResponse(Object response) {
+	public void setResponse(T response) {
 		this.response = response;
+	}
+
+	public List<T> getResponseList() {
+		return responseList;
+	}
+
+	public void setResponseList(List<T> responseList) {
+		this.responseList = responseList;
 	}
 
 }
