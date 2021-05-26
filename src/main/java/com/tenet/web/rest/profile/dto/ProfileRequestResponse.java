@@ -1,4 +1,4 @@
-package com.tenet.web.rest.admin.dto.request;
+package com.tenet.web.rest.profile.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

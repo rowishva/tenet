@@ -1,4 +1,4 @@
-package com.tenet.web.rest.admin.dto.request;
+package com.tenet.web.rest.profile.dto;
 
 import com.tenet.web.rest.common.entity.Profile;
 import org.modelmapper.ModelMapper;

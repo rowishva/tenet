@@ -1,8 +1,8 @@
-package com.tenet.web.rest.admin;
+package com.tenet.web.rest.profile;
 
-import com.tenet.web.rest.admin.dto.request.ProfileListResponse;
-import com.tenet.web.rest.admin.dto.request.ProfileRequestMapper;
-import com.tenet.web.rest.admin.dto.request.ProfileRequestResponse;
+import com.tenet.web.rest.profile.dto.ProfileListResponse;
+import com.tenet.web.rest.profile.dto.ProfileRequestMapper;
+import com.tenet.web.rest.profile.dto.ProfileRequestResponse;
 import com.tenet.web.rest.common.repository.ProfileRepository;
 import lombok.val;
 import org.modelmapper.ModelMapper;
