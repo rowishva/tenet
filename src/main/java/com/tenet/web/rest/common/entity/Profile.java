@@ -11,14 +11,18 @@ import java.util.List;
 
 @Entity
 @Data
-@Table(name = "profiles",
-        uniqueConstraints=@UniqueConstraint(columnNames={"email"}))
+@Table(name = "profiles")
+//        ,
+//        uniqueConstraints=@UniqueConstraint(columnNames={"email"}
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
-@Where(clause = "is_deleted=0")
+@ToString
+//@Where(clause = "is_deleted=0")
 public class Profile extends BaseDomain {
+
+    private static final long serialVersionUID = 20L;
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -34,13 +38,13 @@ public class Profile extends BaseDomain {
     @Column(name = "email", length = 50)
     private String email;
 
-    @Column(name = "password", length = 20)
+    @Column(name = "password", length = 50)
     private String password;
 
-    @Column(name="date_of_birth", length = 20)
+    @Column(name="date_of_birth", length = 50)
     private String dateOfBirth;
 
-    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Dependent> dependents;
 
 
@@ -68,5 +72,6 @@ public class Profile extends BaseDomain {
         dependent.setFullName(fullName);
         dependent.setDateOfBirth(dateOfBirth);
         dependent.setRelationship(relationship);
+
     }
 }

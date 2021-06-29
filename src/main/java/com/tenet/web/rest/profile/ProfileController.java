@@ -9,11 +9,9 @@ import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.spi.MappingContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,76 +31,84 @@ public class ProfileController {
 
     @RequestMapping("/profiles")
     public List<ProfileDTO> getAllProfile(){
-        List<Profile> profiles = profileRepository.findAll();
 
+        List<Profile> profiles = profileRepository.findAll();
         System.out.println(profiles.size());
         List<ProfileDTO> profileDTOS = profiles.stream()
                 .map(profile -> modelMapper.map(profile, ProfileDTO.class))
                 .collect(Collectors.toList());
-        System.out.print("this is profile");
         return profileDTOS;
     }
 
     @PostMapping("/profiles")
-    public ProfileDTO saveProfile(ProfileDTO profileDTO){
+    public ProfileDTO saveProfile(@RequestBody ProfileDTO profileDTO){
 
         Profile profile = modelMapper.map(profileDTO, Profile.class);
         Profile savedProfile = profileRepository.save(profile);
-        //FIXME ClassCastException
-        return modelMapper.map(savedProfile, (Type) Profile.class);
+        return modelMapper.map(savedProfile, ProfileDTO.class);
     }
 
-    //TODO replace with lambdas
-    Converter<Profile, ProfileDTO> populateExistingDependent = new Converter<Profile, ProfileDTO>() {
-        @Override
-        public ProfileDTO convert(MappingContext<Profile, ProfileDTO> context) {
+    @PutMapping("/profiles")
+    public ProfileDTO updateProfile(@RequestBody ProfileDTO profileDTO) {
+        Profile profile = modelMapper.map(profileDTO, Profile.class);
+        Profile savedProfile = profileRepository.save(profile);
+        return modelMapper.map(savedProfile, ProfileDTO.class);
+    }
 
-            context.getDestination().setId(context.getSource().getId());
-            context.getDestination().setFullName(context.getSource().getFullName());
-            context.getDestination().setContactNumber(context.getSource().getContactNumber());
-            context.getDestination().setDateOfBirth(context.getSource().getDateOfBirth());
-            context.getDestination().setEmail(context.getSource().getEmail());
-            context.getDestination().setPassword(context.getSource().getPassword());
+    Converter<Profile, ProfileDTO> populateExistingDependent = context -> {
+        ProfileDTO profileDTO = new ProfileDTO();
+        profileDTO.setId(context.getSource().getId());
+        profileDTO.setFullName(context.getSource().getFullName());
+        profileDTO.setContactNumber(context.getSource().getContactNumber());
+        profileDTO.setDateOfBirth(context.getSource().getDateOfBirth());
+        profileDTO.setEmail(context.getSource().getEmail());
+        profileDTO.setPassword(context.getSource().getPassword());
 
-            context.getDestination().getDependents().add(new DependentDTO());
-
-            for (Dependent dependent : context.getSource().getDependents()) {
-                context.getDestination().getDependents().add(new DependentDTO(
+        for (Dependent dependent : context.getSource().getDependents()) {
+            if (dependent.getId() != null){
+                profileDTO.getDependents().add(new DependentDTO(
                         dependent.getId(),
                         dependent.getFullName(),
                         dependent.getDateOfBirth(),
                         dependent.getRelationship()
                 ));
             }
-
-            return context.getDestination();
         }
+
+        return profileDTO;
     };
 
-    //TODO replace with lambdas
     Converter<ProfileDTO, Profile> handleDependentEntered = new Converter<ProfileDTO, Profile>() {
         @Override
         public Profile convert(MappingContext<ProfileDTO, Profile> context) {
 
-            context.getDestination().setId(context.getSource().getId());
-            context.getDestination().setFullName(context.getSource().getFullName());
-            context.getDestination().setContactNumber(context.getSource().getContactNumber());
-            context.getDestination().setDateOfBirth(context.getSource().getDateOfBirth());
-            context.getDestination().setEmail(context.getSource().getEmail());
-            context.getDestination().setPassword(context.getSource().getPassword());
-
             if(context.getSource().getId() == null) {
+                Profile profile = new Profile();
+                profile.setFullName(context.getSource().getFullName());
+                profile.setContactNumber(context.getSource().getContactNumber());
+                profile.setDateOfBirth(context.getSource().getDateOfBirth());
+                profile.setEmail(context.getSource().getEmail());
+                profile.setPassword(context.getSource().getPassword());
 
+                List<Dependent> dependents = new ArrayList<>();
                 for(DependentDTO dependentDTO: context.getSource().getDependents()){
-                    context.getDestination().addDependents(
-                            dependentDTO.getFullName(),
-                            dependentDTO.getDateOfBirth(),
-                            dependentDTO.getRelationship()
-                            );
+                    Dependent dependent = new Dependent();
+                    dependent.setFullName(dependentDTO.getFullName());
+                    dependent.setRelationship(dependentDTO.getRelationship());
+                    dependent.setDateOfBirth(dependentDTO.getDateOfBirth());
+                    dependents.add(dependent);
+                    dependent.setProfile(profile);
                 }
+                profile.setDependents(dependents);
+
+                return profile;
             } else {
                 Profile existing = profileRepository.getOne(context.getSource().getId());
-                context.getDestination().getDependents().clear();
+                existing.setFullName(context.getSource().getFullName());
+                existing.setContactNumber(context.getSource().getContactNumber());
+                existing.setDateOfBirth(context.getSource().getDateOfBirth());
+                existing.setEmail(context.getSource().getEmail());
+                //TODO update password here or not?
 
                 for(DependentDTO dependentDTO: context.getSource().getDependents()){
 
@@ -110,29 +116,37 @@ public class ProfileController {
 
                     for(Dependent dependent: existing.getDependents()){
 
-                        if(dependentDTO.getId() != null && dependentDTO.getId() == dependent.getId()){
+                        System.out.println(dependentDTO.getId());
+                        System.out.println( dependent.getId());
+                        System.out.println(" dependent.getId()");
+                        if(dependentDTO.getId() != null && dependentDTO.getId().equals(dependent.getId())){
                             found = true;
                             //FIXME verify if deleted?
-                            dependent.setFullName(dependentDTO.getFullName());
-                            dependent.setDateOfBirth(dependentDTO.getDateOfBirth());
-                            dependent.setRelationship(dependentDTO.getRelationship());
-                            context.getDestination().getDependents().add(dependent);
-
+                            Dependent existingDependent = existing.getDependents().get(0);
+                            existingDependent.setFullName(dependentDTO.getFullName());
+                            existingDependent.setDateOfBirth(dependentDTO.getDateOfBirth());
+                            existingDependent.setRelationship(dependentDTO.getRelationship());
                             break;
                         }
                     }
 
                     // if no dependent added till now
+
                     if(!found && !dependentDTO.getFullName().isEmpty()){
-                        context.getDestination().addDependents(
-                                dependentDTO.getFullName(),
-                                dependentDTO.getDateOfBirth(),
-                                dependentDTO.getRelationship());
+                        Dependent dependent = new Dependent();
+                        dependent.setFullName(dependentDTO.getFullName());
+                        dependent.setRelationship(dependentDTO.getRelationship());
+                        dependent.setDateOfBirth(dependentDTO.getDateOfBirth());
+
+                        dependent.setProfile(existing);
+                        existing.getDependents().add(dependent);
                     }
                 }
+
+                return existing;
             }
 
-            return context.getDestination();
+
         }
     };
 

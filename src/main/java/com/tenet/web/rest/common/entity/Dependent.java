@@ -15,6 +15,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Where(clause = "is_deleted=0")
+@ToString
 public class Dependent extends BaseDomain{
 
     @Id
@@ -31,8 +32,10 @@ public class Dependent extends BaseDomain{
     @Column(name="relationship", length = 50)
     private String relationship;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="profile_id")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Profile profile;
 
     /**
