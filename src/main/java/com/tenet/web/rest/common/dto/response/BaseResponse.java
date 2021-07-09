@@ -23,7 +23,7 @@ public class BaseResponse<T> implements Serializable {
 		this.message = message;
 		this.response = response;
 	}
-	
+
 	public BaseResponse(int status, String message, List<T> responseList) {
 		this.status = status;
 		this.message = message;

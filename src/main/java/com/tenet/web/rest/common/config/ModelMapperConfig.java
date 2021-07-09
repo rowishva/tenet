@@ -15,7 +15,7 @@ public class ModelMapperConfig {
 	}
 
 	public void configProperty(ModelMapper modelMapper) {
-		modelMapper.addMappings(ModelMapPropertyMap.adminUserDtoToAdminUser());
-		modelMapper.addMappings(ModelMapPropertyMap.adminUserRoleDtoToAdminUserRole());
+		/// modelMapper.addMappings(ModelMapPropertyMap.adminUserDtoToAdminUser());
+		// modelMapper.addMappings(ModelMapPropertyMap.adminUserRoleDtoToAdminUserRole());
 	}
 }

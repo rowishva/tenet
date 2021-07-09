@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JsonNodeConverter implements AttributeConverter<JsonNode, String> {
-	
+
 	private Logger LOGGER = LogManager.getLogger(this.getClass());
 
 	@Override

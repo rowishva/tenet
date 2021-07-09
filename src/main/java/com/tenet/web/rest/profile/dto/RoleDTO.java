@@ -1,22 +1,19 @@
-package com.tenet.web.rest.admin.dto;
+package com.tenet.web.rest.profile.dto;
 
 import java.io.Serializable;
 
-import javax.persistence.Convert;
-
 import com.fasterxml.jackson.databind.JsonNode;
-import com.tenet.web.rest.common.JsonNodeConverter;
 
-public class AdminUserRoleDTO implements Serializable {
+public class RoleDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	private long id = 0;
 	private String roleCode = "";
 	private String description = "";
-	//@Convert(converter = JsonNodeConverter.class)
+	// @Convert(converter = JsonNodeConverter.class)
 	private JsonNode privilege;
-	
+
 	public long getId() {
 		return id;
 	}

@@ -16,10 +16,10 @@ import com.tenet.web.rest.common.JsonNodeConverter;
 import com.vladmihalcea.hibernate.type.json.JsonType;
 
 @Entity
-@Table(name = "admin_user_role")
+@Table(name = "mst_role")
 @TypeDef(typeClass = JsonType.class, defaultForType = JsonNode.class)
 @Where(clause = "is_deleted=0")
-public class AdminUserRole extends BaseDomain {
+public class Role extends BaseDomain {
 
 	private static final long serialVersionUID = 1L;
 
@@ -28,10 +28,10 @@ public class AdminUserRole extends BaseDomain {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id = 0;
 
-	@Column(name = "role_code", length=10, nullable=false)
+	@Column(name = "role_code", length = 10, nullable = false)
 	private String roleCode;
 
-	@Column(name = "description", length=50, nullable=false)
+	@Column(name = "description", length = 50, nullable = false)
 	private String description;
 
 	@Column(name = "privilege")
