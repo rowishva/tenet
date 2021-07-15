@@ -5,6 +5,9 @@ import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 public class DependentDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -14,6 +17,11 @@ public class DependentDTO implements Serializable {
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	private LocalDate dateOfBirth;
 	private String relationship;
+	private String contactNumber;
+	private String communityCategory;
+	private int specialNeeds;
+	@JsonProperty(access = Access.WRITE_ONLY)
+	private boolean delete;
 
 	public long getId() {
 		return id;
@@ -47,4 +55,35 @@ public class DependentDTO implements Serializable {
 		this.relationship = relationship;
 	}
 
+	public String getContactNumber() {
+		return contactNumber;
+	}
+
+	public void setContactNumber(String contactNumber) {
+		this.contactNumber = contactNumber;
+	}
+
+	public String getCommunityCategory() {
+		return communityCategory;
+	}
+
+	public void setCommunityCategory(String communityCategory) {
+		this.communityCategory = communityCategory;
+	}
+
+	public int getSpecialNeeds() {
+		return specialNeeds;
+	}
+
+	public void setSpecialNeeds(int specialNeeds) {
+		this.specialNeeds = specialNeeds;
+	}
+
+	public boolean isDelete() {
+		return delete;
+	}
+
+	public void setDelete(boolean delete) {
+		this.delete = delete;
+	}
 }

@@ -1,18 +1,16 @@
 package com.tenet.web.rest.profile.dto;
 
 import java.io.Serializable;
-
-import com.fasterxml.jackson.databind.JsonNode;
+import java.util.List;
 
 public class RoleDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private long id = 0;
-	private String roleCode = "";
-	private String description = "";
-	// @Convert(converter = JsonNodeConverter.class)
-	private JsonNode privilege;
+	private long id;
+	private String roleCode;
+	private String description;
+	private List<String> privilege;
 
 	public long getId() {
 		return id;
@@ -38,11 +36,11 @@ public class RoleDTO implements Serializable {
 		this.description = description;
 	}
 
-	public JsonNode getPrivilege() {
+	public List<String> getPrivilege() {
 		return privilege;
 	}
 
-	public void setPrivilege(JsonNode privilege) {
+	public void setPrivilege(List<String> privilege) {
 		this.privilege = privilege;
 	}
 

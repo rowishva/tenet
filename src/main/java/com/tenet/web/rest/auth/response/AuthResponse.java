@@ -29,5 +29,5 @@ public class AuthResponse implements Serializable {
 	public RoleDTO getRole() {
 		return role;
 	}
-	
+
 }

@@ -32,27 +32,27 @@ public class ProfileController {
 	@ApiOperation(value = "Create new Profile", response = BaseResponse.class)
 	@RequestMapping(value = ServiceEndpoints.REGISTER, method = RequestMethod.POST)
 	public BaseResponse<ProfileDTO> createProfile(@RequestBody ProfileDTO request) {
-		LOGGER.debug("Calling Controller.createProfile()");
+		LOGGER.debug("Calling ProfileController.createProfile()");
 		return service.createProfile(request);
 	}
 
 	@ApiOperation(value = "Update Profile", response = BaseResponse.class)
 	@RequestMapping(method = RequestMethod.PUT)
-	public BaseResponse<ProfileDTO> updateAdminProfile(@RequestBody ProfileDTO request) {
+	public BaseResponse<ProfileDTO> updateProfile(@RequestBody ProfileDTO request) {
 		LOGGER.debug("Calling ProfileController.updateProfile()");
 		return service.updateProfile(request);
 	}
 
 	@ApiOperation(value = "Delete Profile", response = BaseResponse.class)
 	@RequestMapping(value = ServiceEndpoints.ID, method = RequestMethod.DELETE)
-	public BaseResponse<ProfileDTO> deleteAdminProfile(@PathVariable("id") long id) {
+	public BaseResponse<ProfileDTO> deleteProfile(@PathVariable("id") long id) {
 		LOGGER.debug("Calling ProfileController.deleteProfile()");
 		return service.deleteProfile(id);
 	}
 
 	@ApiOperation(value = "Get Profile", response = BaseResponse.class)
 	@RequestMapping(value = ServiceEndpoints.ID, method = RequestMethod.GET)
-	public BaseResponse<ProfileDTO> getAdminProfile(@PathVariable("id") long id) {
+	public BaseResponse<ProfileDTO> getProfile(@PathVariable("id") long id) {
 		LOGGER.debug("Calling ProfileController.getProfile()");
 		return service.getProfile(id);
 	}

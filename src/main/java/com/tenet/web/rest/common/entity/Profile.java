@@ -7,6 +7,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,22 +16,28 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Where;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.tenet.web.rest.common.enums.ProfileStatus;
+import com.tenet.web.rest.common.enums.SpecialNeeds;
+
 @Entity
-@Table(name = "trn_profile")
+@Table(name = "trn_profile", uniqueConstraints = @UniqueConstraint(columnNames = { "username" }))
 @Where(clause = "is_deleted=0")
+@SequenceGenerator(name = "profile_sequence_generator", sequenceName = "profile_sequence", initialValue = 10000, allocationSize = 1)
 public class Profile extends BaseDomain {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "profile_sequence_generator")
+	private Long id;
 
 	@Column(name = "full_name", length = 50)
 	private String fullName;
@@ -47,18 +55,29 @@ public class Profile extends BaseDomain {
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	private LocalDate dateOfBirth;
 
-	@OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	private List<Dependent> dependents;
 
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "role_id")
+	@ManyToOne
+	@JoinColumn(name = "role_id", referencedColumnName = "id")
 	private Role role;
 
-	public long getId() {
+	@Enumerated(EnumType.STRING)
+	@Column(name = "status", length = 20)
+	private ProfileStatus status;
+
+	@Column(name = "communityCategory", length = 50)
+	private String communityCategory;
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "specialNeeds", length = 20)
+	private SpecialNeeds specialNeeds;
+
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -120,4 +139,29 @@ public class Profile extends BaseDomain {
 	public void setDependents(List<Dependent> dependents) {
 		this.dependents = dependents;
 	}
+
+	public ProfileStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(ProfileStatus status) {
+		this.status = status;
+	}
+
+	public String getCommunityCategory() {
+		return communityCategory;
+	}
+
+	public void setCommunityCategory(String communityCategory) {
+		this.communityCategory = communityCategory;
+	}
+
+	public SpecialNeeds getSpecialNeeds() {
+		return specialNeeds;
+	}
+
+	public void setSpecialNeeds(SpecialNeeds specialNeeds) {
+		this.specialNeeds = specialNeeds;
+	}
+
 }

@@ -5,8 +5,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +27,6 @@ import com.tenet.web.rest.common.otp.OTPUtil;
 import com.tenet.web.rest.common.repository.ProfileRepository;
 import com.tenet.web.rest.common.repository.RoleRepository;
 import com.tenet.web.rest.common.service.EmailService;
-import com.tenet.web.rest.common.service.ModelMapperService;
 import com.tenet.web.rest.profile.dto.DependentDTO;
 import com.tenet.web.rest.profile.dto.ProfileDTO;
 import com.tenet.web.rest.profile.service.ProfileService;
@@ -35,7 +37,7 @@ public class ProfileServiceImpl implements ProfileService {
 	private Logger LOGGER = LogManager.getLogger(this.getClass());
 
 	@Autowired
-	private ModelMapperService modelMapperService;
+	private ModelMapper modelMapper;
 
 	@Autowired
 	private ProfileRepository profileRepository;
@@ -50,23 +52,25 @@ public class ProfileServiceImpl implements ProfileService {
 	private EmailService emailService;
 
 	@Override
+	@Transactional
 	public BaseResponse<ProfileDTO> createProfile(ProfileDTO request) {
 		LOGGER.debug("Calling ProfileServiceImpl.createProfile()");
-		Profile profile = (Profile) modelMapperService.convert(request, Profile.class);
+		final Profile profile = (Profile) modelMapper.map(request, Profile.class);
 		profile.setPassword(bcryptEncoder.encode(request.getPassword()));
-		Role role = roleRepository.findByRoleCode(request.getRoleCode());
+		Role role = roleRepository.findByRoleCode("USER");
 		List<DependentDTO> dependentDTOList = request.getDependents();
 		List<Dependent> dependentList = dependentDTOList.stream()
-				.map(dependent -> (Dependent) modelMapperService.convert(dependent, Dependent.class))
+				.map(dependentDTO -> (Dependent) modelMapper.map(dependentDTO, Dependent.class))
 				.collect(Collectors.toList());
+		dependentList.forEach(dependent -> dependent.setProfile(profile));
 		profile.setDependents(dependentList);
 		BaseResponse<ProfileDTO> response = null;
 		if (role != null) {
 			profile.setRole(role);
-			profile = profileRepository.save(profile);
+			Profile profileSaved = profileRepository.save(profile);
 			LOGGER.debug("Sending Email with OTP");
 			sendEmail(profile.getFullName(), profile.getUsername());
-			ProfileDTO profileDTO = (ProfileDTO) modelMapperService.convert(profile, ProfileDTO.class);
+			ProfileDTO profileDTO = (ProfileDTO) modelMapper.map(profileSaved, ProfileDTO.class);
 			response = new BaseResponse<ProfileDTO>(HttpStatus.CREATED.value(), ApplicationConstants.SUCCESS,
 					profileDTO);
 		} else {
@@ -79,18 +83,18 @@ public class ProfileServiceImpl implements ProfileService {
 	@Override
 	public BaseResponse<ProfileDTO> updateProfile(ProfileDTO request) {
 		LOGGER.debug("Calling ProfileServiceImpl.updateUser()");
-		Profile profile = (Profile) modelMapperService.convert(request, Profile.class);
+		Profile profile = (Profile) modelMapper.map(request, Profile.class);
 		Role role = roleRepository.findByRoleCode(request.getRoleCode());
 		BaseResponse<ProfileDTO> response = null;
 		if (profile != null && role != null) {
 			profile.setRole(role);
 			List<DependentDTO> dependentDTOList = request.getDependents();
 			List<Dependent> dependentList = dependentDTOList.stream()
-					.map(dependent -> (Dependent) modelMapperService.convert(dependent, Dependent.class))
+					.map(dependent -> (Dependent) modelMapper.map(dependent, Dependent.class))
 					.collect(Collectors.toList());
 			profile.setDependents(dependentList);
 			profile = profileRepository.save(profile);
-			ProfileDTO profileDTO = (ProfileDTO) modelMapperService.convert(profile, ProfileDTO.class);
+			ProfileDTO profileDTO = (ProfileDTO) modelMapper.map(profile, ProfileDTO.class);
 			response = new BaseResponse<ProfileDTO>(HttpStatus.OK.value(), ApplicationConstants.SUCCESS, profileDTO);
 		} else {
 			response = new BaseResponse<ProfileDTO>(HttpStatus.CONFLICT.value(), ApplicationConstants.ERROR);
@@ -99,7 +103,7 @@ public class ProfileServiceImpl implements ProfileService {
 	}
 
 	@Override
-	public BaseResponse<ProfileDTO> deleteProfile(long id) {
+	public BaseResponse<ProfileDTO> deleteProfile(Long id) {
 		LOGGER.debug("Calling ProfileServiceImpl.deleteProfile()");
 		Profile profile = profileRepository.getOne(id);
 		BaseResponse<ProfileDTO> response = null;
@@ -114,12 +118,12 @@ public class ProfileServiceImpl implements ProfileService {
 	}
 
 	@Override
-	public BaseResponse<ProfileDTO> getProfile(long id) {
+	public BaseResponse<ProfileDTO> getProfile(Long id) {
 		LOGGER.debug("Calling ProfileServiceImpl.getProfile()");
 		Profile profile = profileRepository.getOne(id);
 		BaseResponse<ProfileDTO> response = null;
 		if (profile != null) {
-			ProfileDTO profileDTO = (ProfileDTO) modelMapperService.convert(profile, ProfileDTO.class);
+			ProfileDTO profileDTO = (ProfileDTO) modelMapper.map(profile, ProfileDTO.class);
 			response = new BaseResponse<ProfileDTO>(HttpStatus.OK.value(), ApplicationConstants.SUCCESS, profileDTO);
 		} else {
 			response = new BaseResponse<ProfileDTO>(HttpStatus.CONFLICT.value(), ApplicationConstants.ERROR);
@@ -134,7 +138,7 @@ public class ProfileServiceImpl implements ProfileService {
 		BaseResponse<ProfileDTO> response = null;
 		if (profileList != null) {
 			List<ProfileDTO> adminUserDTOList = profileList.stream()
-					.map(adminUser -> (ProfileDTO) modelMapperService.convert(adminUser, ProfileDTO.class))
+					.map(adminUser -> (ProfileDTO) modelMapper.map(adminUser, ProfileDTO.class))
 					.collect(Collectors.toList());
 			response = new BaseResponse<ProfileDTO>(HttpStatus.OK.value(), ApplicationConstants.SUCCESS,
 					adminUserDTOList);

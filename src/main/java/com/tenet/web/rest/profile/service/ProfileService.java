@@ -11,9 +11,9 @@ public interface ProfileService {
 
 	public BaseResponse<ProfileDTO> updateProfile(ProfileDTO request);
 
-	public BaseResponse<ProfileDTO> deleteProfile(long id);
+	public BaseResponse<ProfileDTO> deleteProfile(Long id);
 
-	public BaseResponse<ProfileDTO> getProfile(long id);
+	public BaseResponse<ProfileDTO> getProfile(Long id);
 
 	public BaseResponse<ProfileDTO> getAllProfile(Pageable pageable);
 

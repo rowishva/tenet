@@ -36,7 +36,7 @@ public class AuthController {
 
 	@Autowired
 	private AuthUserDetailsService userDetailsService;
-	
+
 	@Autowired
 	private ModelMapperService modelMapperService;
 

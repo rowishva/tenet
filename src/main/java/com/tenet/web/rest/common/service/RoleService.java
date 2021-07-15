@@ -1,4 +1,4 @@
-package com.tenet.web.rest.profile.service;
+package com.tenet.web.rest.common.service;
 
 import com.tenet.web.rest.common.dto.response.BaseResponse;
 import com.tenet.web.rest.profile.dto.RoleDTO;

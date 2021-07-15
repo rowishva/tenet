@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.data.convert.JodaTimeConverters.LocalDateTimeToDateConverter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,6 +23,9 @@ public class ProfileDTO implements Serializable {
 	private LocalDate dateOfBirth;
 	private List<DependentDTO> dependents;
 	private String roleCode;
+	private int status;
+	private String communityCategory;
+	private int specialNeeds;
 
 	public long getId() {
 		return id;
@@ -87,6 +89,30 @@ public class ProfileDTO implements Serializable {
 
 	public void setRoleCode(String roleCode) {
 		this.roleCode = roleCode;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public String getCommunityCategory() {
+		return communityCategory;
+	}
+
+	public void setCommunityCategory(String communityCategory) {
+		this.communityCategory = communityCategory;
+	}
+
+	public int getSpecialNeeds() {
+		return specialNeeds;
+	}
+
+	public void setSpecialNeeds(int specialNeeds) {
+		this.specialNeeds = specialNeeds;
 	}
 
 }

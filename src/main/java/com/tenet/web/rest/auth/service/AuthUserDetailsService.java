@@ -21,7 +21,7 @@ public class AuthUserDetailsService implements UserDetailsService {
 
 	@Autowired
 	private ProfileRepository profileRepository;
-	
+
 	private Profile profile;
 
 	@Override
@@ -42,5 +42,5 @@ public class AuthUserDetailsService implements UserDetailsService {
 	public void setProfile(Profile profile) {
 		this.profile = profile;
 	}
-	
+
 }

@@ -1,4 +1,4 @@
-package com.tenet.web.rest.profile.controller;
+package com.tenet.web.rest.common.controller;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tenet.web.rest.common.ServiceEndpoints;
 import com.tenet.web.rest.common.dto.response.BaseResponse;
+import com.tenet.web.rest.common.service.RoleService;
 import com.tenet.web.rest.profile.dto.RoleDTO;
-import com.tenet.web.rest.profile.service.RoleService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

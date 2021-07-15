@@ -1,4 +1,4 @@
-package com.tenet.web.rest.profile.service.impl;
+package com.tenet.web.rest.common.service.impl;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,8 +15,8 @@ import com.tenet.web.rest.common.dto.response.BaseResponse;
 import com.tenet.web.rest.common.entity.Role;
 import com.tenet.web.rest.common.repository.RoleRepository;
 import com.tenet.web.rest.common.service.ModelMapperService;
+import com.tenet.web.rest.common.service.RoleService;
 import com.tenet.web.rest.profile.dto.RoleDTO;
-import com.tenet.web.rest.profile.service.RoleService;
 
 @Service
 public class RoleServiceImpl implements RoleService {

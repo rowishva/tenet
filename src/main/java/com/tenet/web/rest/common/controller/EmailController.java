@@ -1,4 +1,4 @@
-package com.tenet.web.rest.profile.controller;
+package com.tenet.web.rest.common.controller;
 
 import java.util.HashMap;
 import java.util.Map;
