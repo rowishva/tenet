@@ -49,7 +49,7 @@ public class AuthController {
 		Profile profile = userDetailsService.getProfile();
 		RoleDTO roleDTO = (RoleDTO) modelMapperService.convert(profile.getRole(), RoleDTO.class);
 		return new BaseResponse<AuthResponse>(HttpStatus.OK.value(), ApplicationConstants.SUCCESS,
-				new AuthResponse(token, profile.getFullName(), roleDTO));
+				new AuthResponse(token, profile.getFullName(), roleDTO, profile.getId().toString()));
 	}
 
 	private void authenticate(String username, String password) throws Exception {

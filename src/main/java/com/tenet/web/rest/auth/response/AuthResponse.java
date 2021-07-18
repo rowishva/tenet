@@ -10,12 +10,14 @@ public class AuthResponse implements Serializable {
 	private final String token;
 	private final String fullName;
 	private final RoleDTO role;
+	private final String profileId;
 
-	public AuthResponse(String token, String fullName, RoleDTO role) {
+	public AuthResponse(String token, String fullName, RoleDTO role, String profileId) {
 		super();
 		this.token = token;
 		this.fullName = fullName;
 		this.role = role;
+		this.profileId = profileId;
 	}
 
 	public String getToken() {
@@ -29,5 +31,7 @@ public class AuthResponse implements Serializable {
 	public RoleDTO getRole() {
 		return role;
 	}
+
+	public  String getProfileId() { return profileId;}
 
 }
