@@ -55,7 +55,7 @@ public class Profile extends BaseDomain {
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	private LocalDate dateOfBirth;
 
-	@OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<Dependent> dependents;
 
 	@ManyToOne
@@ -72,6 +72,9 @@ public class Profile extends BaseDomain {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "specialNeeds", length = 20)
 	private SpecialNeeds specialNeeds;
+	
+	@Column(name = "otp", length = 10)
+	private String otp;
 
 	public Long getId() {
 		return id;
@@ -162,6 +165,14 @@ public class Profile extends BaseDomain {
 
 	public void setSpecialNeeds(SpecialNeeds specialNeeds) {
 		this.specialNeeds = specialNeeds;
+	}
+
+	public String getOtp() {
+		return otp;
+	}
+
+	public void setOtp(String otp) {
+		this.otp = otp;
 	}
 
 }

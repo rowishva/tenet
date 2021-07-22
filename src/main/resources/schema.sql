@@ -52,6 +52,7 @@ CREATE TABLE `trn_profile` (
   `status` varchar(20) DEFAULT NULL,
   `username` varchar(50) DEFAULT NULL,
   `role_id` bigint DEFAULT NULL,
+  `otp` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_trn_profile_username` (`username`),
   KEY `FK_trn_profile_role_id` (`role_id`),

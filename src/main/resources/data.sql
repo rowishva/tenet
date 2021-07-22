@@ -2,8 +2,8 @@ INSERT INTO `mst_role` (`id`,`create_time`,`created_by_user`,`is_deleted`,`updat
 VALUES (1,'2021-07-14 09:45:06.863000','Dummy Created','\0',NULL,'DUMMY_USER',0,'User Role','Login;Registration;ManageDependents;MassBooking','USER');
 INSERT INTO `role_sequence` VALUES (2);
 
-INSERT INTO `trn_profile`(`id`,`create_time`,`created_by_user`,`is_deleted`,`update_time`,`updated_by_user`,`version_number`,`community_category`,`contact_number`,`date_of_birth`,`full_name`,`password`,`special_needs`,`status`,`username`,`role_id`)
-VALUES (10000,'2021-07-14 09:19:47.345000','Dummy Created','\0','2021-07-14 09:19:56.116000','Dummy Updated',1,'BEC','01564446445','2000-01-07','Do Chen Hao','$2a$10$VjLhEdP.kkbbhDUm2zPYHO0xE0DTX.vroX9WF8yDorLIrRX1RUXUS','NONE','ACTIVE','test@gmail.com',1);
+INSERT INTO `trn_profile`(`id`,`create_time`,`created_by_user`,`is_deleted`,`update_time`,`updated_by_user`,`version_number`,`community_category`,`contact_number`,`date_of_birth`,`full_name`,`password`,`special_needs`,`status`,`username`,`role_id`,`otp`)
+VALUES (10000,'2021-07-14 09:19:47.345000','Dummy Created','\0','2021-07-14 09:19:56.116000','Dummy Updated',1,'BEC','01564446445','2000-01-07','Do Chen Hao','$2a$10$VjLhEdP.kkbbhDUm2zPYHO0xE0DTX.vroX9WF8yDorLIrRX1RUXUS','NONE','ACTIVE','test@gmail.com',1,'');
 INSERT INTO `profile_sequence` VALUES (10001);
 
 INSERT INTO `trn_dependent`(`id`,`create_time`,`created_by_user`,`is_deleted`,`update_time`,`updated_by_user`,`version_number`,`community_category`,`contact_number`,`date_of_birth`,`full_name`,`relationship`,`special_needs`,`profile_id`)

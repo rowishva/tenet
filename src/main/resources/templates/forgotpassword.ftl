@@ -2,9 +2,9 @@
 <head></head>
 <body>
     <p>Dear ${name},</p>
-    <p>Your account has been created successfully</p>
+    <p>Your account password has been resetted</p>
     <p><b>${otp}</b></p>
-    <p>Confirm your account by enterring OTP</p>
+    <p>Enter the OTP and set your new Password</p>
     <p>Thanks</p>
     <p>Team Tenet</p>
 </body>

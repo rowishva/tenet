@@ -44,7 +44,7 @@ public class EmailService {
 		javaMailSender.send(mimeMessage);
 	}
 
-	public void sendEmailWithTemplate(Email mail) {
+	public void sendEmailWithTemplate(Email mail, int template) {
 		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 		try {
 
@@ -53,7 +53,7 @@ public class EmailService {
 			mimeMessageHelper.setSubject(mail.getSubject());
 			mimeMessageHelper.setFrom(mail.getFrom());
 			mimeMessageHelper.setTo(mail.getTo());
-			mail.setContent(getContentFromTemplate(mail.getModel()));
+			mail.setContent(getContentFromTemplate(mail.getModel(), template));
 			mimeMessageHelper.setText(mail.getContent(), true);
 
 			javaMailSender.send(mimeMessageHelper.getMimeMessage());
@@ -62,12 +62,23 @@ public class EmailService {
 		}
 	}
 
-	public String getContentFromTemplate(Map<String, Object> model) {
+	public String getContentFromTemplate(Map<String, Object> model, int template) {
 		StringBuffer content = new StringBuffer();
-
+		String templateName = null;
+		switch (template) {
+		  case 1:
+			  templateName = "profilecreateemail.ftl";
+		    break;
+		  case 2:
+			  templateName = "newotp.ftl";
+		    break;
+		  case 3:
+			  templateName = "forgotpassword.ftl";
+		    break;		  
+		}
 		try {
 			content.append(FreeMarkerTemplateUtils
-					.processTemplateIntoString(fmConfiguration.getTemplate("profilecreateemail.ftl"), model));
+					.processTemplateIntoString(fmConfiguration.getTemplate(templateName), model));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
