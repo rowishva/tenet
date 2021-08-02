@@ -6,7 +6,8 @@ import java.util.Map;
 
 public enum ProfileStatus {
 
-	ACTIVE(0, "Active"), CLOSED(1, "Closed"), DISABLED(2, "Disabled"), BLACKLIST(3, "BlackList"),OTPVERIFICATION(4, "OTPVerification");
+	ACTIVE(0, "Active"), CLOSED(1, "Closed"), DISABLED(2, "Disabled"), BLACKLIST(3, "BlackList"),
+	OTPVERIFICATION(4, "OTPVerification");
 
 	private int code;
 

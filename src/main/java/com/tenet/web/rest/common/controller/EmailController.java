@@ -24,7 +24,7 @@ public class EmailController {
 		model.put("name", "Do Chen");
 		model.put("otp", OTPUtil.generateOTP(6));
 		Email mail = new Email("user@gmail.com", "no-reply@tenet.com", "Welcome to Tenet", null, model);
-		emailService.sendEmailWithTemplate(mail,1);
+		emailService.sendEmailWithTemplate(mail, 1);
 		return "sendEmailWithTemplate";
 	}
 }

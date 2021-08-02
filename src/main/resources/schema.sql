@@ -1,13 +1,18 @@
 CREATE DATABASE  IF NOT EXISTS `tenetdb`;
-
+--Drop Table --
 DROP TABLE IF EXISTS `trn_dependent`;
 DROP TABLE IF EXISTS `trn_profile`;
 DROP TABLE IF EXISTS `mst_role`;
+DROP TABLE IF EXISTS `trn_mass_core_team`;
+DROP TABLE IF EXISTS `trn_mass_time`;
+--Drop sequence --
 DROP TABLE IF EXISTS `dependent_sequence`;
 DROP TABLE IF EXISTS `profile_sequence`;
 DROP TABLE IF EXISTS `role_sequence`;
+DROP TABLE IF EXISTS `mass_time_sequence`;
+DROP TABLE IF EXISTS `mass_core_team_sequence`;
 
-
+--Create sequence --
 CREATE TABLE `dependent_sequence` (
   `next_val` bigint DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -19,6 +24,16 @@ CREATE TABLE `profile_sequence` (
 CREATE TABLE `role_sequence` (
   `next_val` bigint DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `mass_time_sequence` (
+  `next_val` bigint DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `mass_core_team_sequence` (
+  `next_val` bigint DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--Create table --
 
 CREATE TABLE `mst_role` (
   `id` bigint NOT NULL AUTO_INCREMENT,
@@ -78,3 +93,36 @@ CREATE TABLE `trn_dependent` (
   KEY `FK_trn_dependent_profile_id` (`profile_id`),
   CONSTRAINT `FK_trn_dependent_profile_id` FOREIGN KEY (`profile_id`) REFERENCES `trn_profile` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `trn_mass_time` (
+  `id` bigint NOT NULL,
+  `create_time` datetime(6) NOT NULL,
+  `created_by_user` varchar(255) NOT NULL,
+  `is_deleted` bit(1) DEFAULT NULL,
+  `update_time` datetime(6) DEFAULT NULL,
+  `updated_by_user` varchar(255) DEFAULT NULL,
+  `version_number` bigint DEFAULT NULL,
+  `available_capacity` int DEFAULT NULL,
+  `date` date DEFAULT NULL,
+  `status` varchar(20) DEFAULT NULL,
+  `time` time DEFAULT NULL,
+  `total_capacity` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `trn_mass_core_team` (
+  `id` bigint NOT NULL,
+  `create_time` datetime(6) NOT NULL,
+  `created_by_user` varchar(255) NOT NULL,
+  `is_deleted` bit(1) DEFAULT NULL,
+  `update_time` datetime(6) DEFAULT NULL,
+  `updated_by_user` varchar(255) DEFAULT NULL,
+  `version_number` bigint DEFAULT NULL,
+  `full_name` varchar(50) DEFAULT NULL,
+  `contact_number` varchar(16) DEFAULT NULL,
+  `mass_time_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_trn_mass_time_mass_time_id` (`mass_time_id`),
+  CONSTRAINT `FK_trn_mass_time_mass_time_id` FOREIGN KEY (`mass_time_id`) REFERENCES `trn_mass_time` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+

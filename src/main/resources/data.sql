@@ -9,3 +9,6 @@ INSERT INTO `profile_sequence` VALUES (10001);
 INSERT INTO `trn_dependent`(`id`,`create_time`,`created_by_user`,`is_deleted`,`update_time`,`updated_by_user`,`version_number`,`community_category`,`contact_number`,`date_of_birth`,`full_name`,`relationship`,`special_needs`,`profile_id`)
 VALUES (10000,'2021-07-14 09:19:49.319000','Dummy Created','\0',NULL,'DUMMY_USER',0,'BEC','10293756','2003-01-17','Do Chun','Son','NONE',10000),(10001,'2021-07-14 09:19:50.223000','Dummy Created','\0',NULL,'DUMMY_USER',0,'BEC','1425374586','2005-01-17','Do Chon Chun','Son','SPECIALNEED_HELPER',10000);
 INSERT INTO `dependent_sequence` VALUES (10003);
+
+INSERT INTO `mass_time_sequence` VALUES (1000);
+INSERT INTO `mass_core_team_sequence` VALUES (1000);

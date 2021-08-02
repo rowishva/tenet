@@ -66,19 +66,19 @@ public class EmailService {
 		StringBuffer content = new StringBuffer();
 		String templateName = null;
 		switch (template) {
-		  case 1:
-			  templateName = "profilecreateemail.ftl";
-		    break;
-		  case 2:
-			  templateName = "newotp.ftl";
-		    break;
-		  case 3:
-			  templateName = "forgotpassword.ftl";
-		    break;		  
+		case 1:
+			templateName = "profilecreateemail.ftl";
+			break;
+		case 2:
+			templateName = "newotp.ftl";
+			break;
+		case 3:
+			templateName = "forgotpassword.ftl";
+			break;
 		}
 		try {
-			content.append(FreeMarkerTemplateUtils
-					.processTemplateIntoString(fmConfiguration.getTemplate(templateName), model));
+			content.append(FreeMarkerTemplateUtils.processTemplateIntoString(fmConfiguration.getTemplate(templateName),
+					model));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

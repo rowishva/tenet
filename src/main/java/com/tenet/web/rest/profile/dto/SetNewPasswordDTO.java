@@ -1,10 +1,6 @@
 package com.tenet.web.rest.profile.dto;
 
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.List;
-
-import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
@@ -15,7 +11,7 @@ public class SetNewPasswordDTO implements Serializable {
 
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
-	
+
 	public String getPassword() {
 		return password;
 	}

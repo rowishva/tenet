@@ -18,12 +18,12 @@ public interface ProfileService {
 	public BaseResponse<ProfileDTO> getProfile(Long id);
 
 	public BaseResponse<ProfileDTO> getAllProfile(Pageable pageable);
-	
+
 	public BaseResponse<ProfileDTO> sendNewOtp(String username);
-	
+
 	public BaseResponse<ProfileDTO> forgotPassword(String username);
-	
+
 	public BaseResponse<ProfileDTO> setNewPassword(String username, SetNewPasswordDTO request);
-	
+
 	public BaseResponse<ProfileDTO> otpVerification(String username, String otp);
 }

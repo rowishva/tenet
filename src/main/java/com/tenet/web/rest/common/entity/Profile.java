@@ -72,7 +72,7 @@ public class Profile extends BaseDomain {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "specialNeeds", length = 20)
 	private SpecialNeeds specialNeeds;
-	
+
 	@Column(name = "otp", length = 10)
 	private String otp;
 

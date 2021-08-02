@@ -60,38 +60,40 @@ public class ProfileController {
 	}
 
 	@ApiOperation(value = "Retrieve List of Profile", response = BaseResponse.class)
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(value = ServiceEndpoints.PAGE, method = RequestMethod.GET)
 	public BaseResponse<ProfileDTO> getAllProfile(@PathVariable("pageNo") Integer pageNo,
 			@PathVariable("pageSize") Integer pageSize) {
 		LOGGER.debug("Calling ProfileController.getAllProfile()");
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
 		return service.getAllProfile(pageable);
 	}
-	
+
 	@ApiOperation(value = "Send new Otp", response = BaseResponse.class)
 	@RequestMapping(value = ServiceEndpoints.PROFILE_SEND_NEW_OTP, method = RequestMethod.GET)
 	public BaseResponse<ProfileDTO> sendNewOtp(@PathVariable("username") String username) {
 		LOGGER.debug("Calling ProfileController.sendNewOtp()");
 		return service.sendNewOtp(username);
 	}
-	
+
 	@ApiOperation(value = "Forgot Password", response = BaseResponse.class)
 	@RequestMapping(value = ServiceEndpoints.PROFILE_FORGOT_PASSWORD, method = RequestMethod.GET)
 	public BaseResponse<ProfileDTO> forgotPassword(@PathVariable("username") String username) {
 		LOGGER.debug("Calling ProfileController.sendNewOtp()");
 		return service.forgotPassword(username);
 	}
-	
+
 	@ApiOperation(value = "Forgot Password", response = BaseResponse.class)
 	@RequestMapping(value = ServiceEndpoints.PROFILE_SET_NEW_PASSWORD, method = RequestMethod.PUT)
-	public BaseResponse<ProfileDTO> setNewPassword(@PathVariable("username") String username, @RequestBody SetNewPasswordDTO request) {
+	public BaseResponse<ProfileDTO> setNewPassword(@PathVariable("username") String username,
+			@RequestBody SetNewPasswordDTO request) {
 		LOGGER.debug("Calling ProfileController.setNewPassword()");
 		return service.setNewPassword(username, request);
 	}
-	
+
 	@ApiOperation(value = "OTP Verification", response = BaseResponse.class)
 	@RequestMapping(value = ServiceEndpoints.PROFILE_OTP_VERIFICATION, method = RequestMethod.GET)
-	public BaseResponse<ProfileDTO> otpVerification(@PathVariable("username") String username, @PathVariable("otp") String otp) {
+	public BaseResponse<ProfileDTO> otpVerification(@PathVariable("username") String username,
+			@PathVariable("otp") String otp) {
 		LOGGER.debug("Calling ProfileController.otpVerification()");
 		return service.otpVerification(username, otp);
 	}

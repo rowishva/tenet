@@ -32,6 +32,8 @@ public class AuthResponse implements Serializable {
 		return role;
 	}
 
-	public  String getProfileId() { return profileId;}
+	public String getProfileId() {
+		return profileId;
+	}
 
 }

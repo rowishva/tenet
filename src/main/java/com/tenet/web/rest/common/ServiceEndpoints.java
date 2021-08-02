@@ -12,7 +12,10 @@ public final class ServiceEndpoints {
 	public static final String PROFILE_FORGOT_PASSWORD = "forgot/password/{username}";
 	public static final String PROFILE_SET_NEW_PASSWORD = "set/new/password/{username}";
 	public static final String PROFILE_OTP_VERIFICATION = "otp/verification/{username}/{otp}";
+	public static final String ADMIN_MASS_TIME = "admin/masstime";
+	public static final String ADMIN_MASS_CORE_TEAM = "admin/masscoreteam/{massTimeId}";
 
 	public static final String ID = "/{id}";
+	public static final String PAGE = "/{pageNo}/{pageSize}";
 
 }

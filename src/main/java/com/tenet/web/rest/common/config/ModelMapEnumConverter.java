@@ -3,6 +3,7 @@ package com.tenet.web.rest.common.config;
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
 
+import com.tenet.web.rest.common.enums.MassStatus;
 import com.tenet.web.rest.common.enums.ProfileStatus;
 import com.tenet.web.rest.common.enums.SpecialNeeds;
 
@@ -59,8 +60,10 @@ public class ModelMapEnumConverter {
 					return ProfileStatus.CLOSED;
 				case 2:
 					return ProfileStatus.DISABLED;
-				default:
+				case 3:
 					return ProfileStatus.BLACKLIST;
+				default:
+					return ProfileStatus.OTPVERIFICATION;
 				}
 			}
 		};
@@ -77,11 +80,48 @@ public class ModelMapEnumConverter {
 					return ProfileStatus.CLOSED.getCode();
 				case DISABLED:
 					return ProfileStatus.DISABLED.getCode();
-				default:
+				case BLACKLIST:
 					return ProfileStatus.BLACKLIST.getCode();
+				default:
+					return ProfileStatus.OTPVERIFICATION.getCode();
+				}
+			}
+		};
+	}	
+	
+	public static Converter<Integer, MassStatus> convertIntToMassStatus() {
+		return new Converter<Integer, MassStatus>() {
+			@Override
+			public MassStatus convert(MappingContext<Integer, MassStatus> context) {
+				switch (context.getSource()) {
+				case 0:
+					return MassStatus.ACTIVE;
+				case 1:
+					return MassStatus.CANCELED;
+				case 2:
+					return MassStatus.ONHOLD;
+				default:
+					return MassStatus.FULLYBOOKED;
 				}
 			}
 		};
 	}
 
+	public static Converter<MassStatus, Integer> convertMassStatusToInt() {
+		return new Converter<MassStatus, Integer>() {
+			@Override
+			public Integer convert(MappingContext<MassStatus, Integer> context) {
+				switch (context.getSource()) {
+				case ACTIVE:
+					return MassStatus.ACTIVE.getCode();
+				case CANCELED:
+					return MassStatus.CANCELED.getCode();
+				case ONHOLD:
+					return MassStatus.ONHOLD.getCode();
+				default:
+					return MassStatus.FULLYBOOKED.getCode();
+				}
+			}
+		};
+	}
 }

@@ -56,13 +56,13 @@ public class ProfileServiceImpl implements ProfileService {
 
 	@Autowired
 	private EmailService emailService;
-	
+
 	@Autowired
 	private DependentRepository dependentRepository;
-	
+
 	@Value("${profile.create.send.email.from}")
 	private String emailFrom;
-	
+
 	@Value("${profile.create.send.email.title}")
 	private String emailTitle;
 
@@ -73,25 +73,25 @@ public class ProfileServiceImpl implements ProfileService {
 		final Profile profile = (Profile) modelMapper.map(request, Profile.class);
 		profile.setPassword(bcryptEncoder.encode(request.getPassword()));
 		Role role = roleRepository.findByRoleCode("USER");
-		profile.setRole(role);		
+		profile.setRole(role);
 		profile.setStatus(ProfileStatus.OTPVERIFICATION);
-		List<DependentDTO> dependentDTOList = request.getDependents();		
-		if(dependentDTOList != null && dependentDTOList.size() > 0) {		
+		List<DependentDTO> dependentDTOList = request.getDependents();
+		if (dependentDTOList != null && dependentDTOList.size() > 0) {
 			List<Dependent> dependentList = dependentDTOList.stream()
 					.map(dependentDTO -> (Dependent) modelMapper.map(dependentDTO, Dependent.class))
 					.collect(Collectors.toList());
 			dependentList.forEach(dependent -> dependent.setProfile(profile));
-			profile.setDependents(dependentList);	
-		}			
+			profile.setDependents(dependentList);
+		}
 		String otp = OTPUtil.generateOTP(6);
-		LOGGER.debug("Generate OTP"+ otp);
-		profile.setOtp(otp);		
+		LOGGER.debug("Generate OTP" + otp);
+		profile.setOtp(otp);
 		Profile profileSaved = profileRepository.save(profile);
 		LOGGER.debug("Sending Email with OTP");
 		sendEmail(profile.getFullName(), profile.getUsername(), otp, 1);
 		ProfileDTO profileDTO = modelMapper.map(profileSaved, ProfileDTO.class);
-		BaseResponse<ProfileDTO> response = new BaseResponse<ProfileDTO>(HttpStatus.CREATED.value(), ApplicationConstants.SUCCESS,
-				profileDTO);
+		BaseResponse<ProfileDTO> response = new BaseResponse<ProfileDTO>(HttpStatus.CREATED.value(),
+				ApplicationConstants.SUCCESS, profileDTO);
 		return response;
 
 	}
@@ -99,13 +99,13 @@ public class ProfileServiceImpl implements ProfileService {
 	@Override
 	public BaseResponse<ProfileDTO> updateProfile(Long id, ProfileUpdateDTO request) {
 		LOGGER.debug("Calling ProfileServiceImpl.updateUser()");
-		Profile profile = profileRepository.getOne(id);	
-		if(profile == null) {
+		Profile profile = profileRepository.getOne(id);
+		if (profile == null) {
 			return new BaseResponse<ProfileDTO>(HttpStatus.CONFLICT.value(), ApplicationConstants.ERROR);
 		}
 		modelMapper.map(request, profile);
-		List<DependentDTO> dependentDTOList = request.getDependents();		
-		if(dependentDTOList != null && dependentDTOList.size() > 0) {			
+		List<DependentDTO> dependentDTOList = request.getDependents();
+		if (dependentDTOList != null && dependentDTOList.size() > 0) {
 			List<Dependent> dependentList = new ArrayList<Dependent>();
 			for (DependentDTO dependentDTO : dependentDTOList) {
 				Dependent dependent = dependentRepository.getOne(dependentDTO.getId());
@@ -124,7 +124,8 @@ public class ProfileServiceImpl implements ProfileService {
 		}
 		profile = profileRepository.save(profile);
 		ProfileDTO profileDTO = (ProfileDTO) modelMapper.map(profile, ProfileDTO.class);
-		BaseResponse<ProfileDTO> response = new BaseResponse<ProfileDTO>(HttpStatus.OK.value(), ApplicationConstants.SUCCESS, profileDTO);
+		BaseResponse<ProfileDTO> response = new BaseResponse<ProfileDTO>(HttpStatus.OK.value(),
+				ApplicationConstants.SUCCESS, profileDTO);
 		return response;
 	}
 
@@ -164,8 +165,7 @@ public class ProfileServiceImpl implements ProfileService {
 		BaseResponse<ProfileDTO> response = null;
 		if (profileList != null) {
 			List<ProfileDTO> profileDTOList = profileList.stream()
-					.map(profileDTO -> modelMapper.map(profileDTO, ProfileDTO.class))
-					.collect(Collectors.toList());
+					.map(profileDTO -> modelMapper.map(profileDTO, ProfileDTO.class)).collect(Collectors.toList());
 			response = new BaseResponse<ProfileDTO>(HttpStatus.OK.value(), ApplicationConstants.SUCCESS,
 					profileDTOList);
 		} else {
@@ -173,73 +173,75 @@ public class ProfileServiceImpl implements ProfileService {
 		}
 		return response;
 	}
-	
+
 	@Override
-	public BaseResponse<ProfileDTO> sendNewOtp(String username){
+	public BaseResponse<ProfileDTO> sendNewOtp(String username) {
 		LOGGER.debug("Calling ProfileServiceImpl.sendNewOtp()");
-		Profile profile = profileRepository.findByUsername(username);	
-		if(profile == null) {
+		Profile profile = profileRepository.findByUsername(username);
+		if (profile == null) {
 			return new BaseResponse<ProfileDTO>(HttpStatus.CONFLICT.value(), ApplicationConstants.ERROR);
 		}
 		String otp = OTPUtil.generateOTP(6);
-		LOGGER.debug("Generate OTP"+ otp);
-		profile.setOtp(otp);		
+		LOGGER.debug("Generate OTP" + otp);
+		profile.setOtp(otp);
 		profileRepository.save(profile);
 		LOGGER.debug("Sending Email with OTP");
 		sendEmail(profile.getFullName(), profile.getUsername(), otp, 2);
-		BaseResponse<ProfileDTO> response = new BaseResponse<ProfileDTO>(HttpStatus.OK.value(), ApplicationConstants.SUCCESS);		
+		BaseResponse<ProfileDTO> response = new BaseResponse<ProfileDTO>(HttpStatus.OK.value(),
+				ApplicationConstants.SUCCESS);
 		return response;
 	}
-	
+
 	@Override
-	public BaseResponse<ProfileDTO> forgotPassword(String username){
+	public BaseResponse<ProfileDTO> forgotPassword(String username) {
 		LOGGER.debug("Calling ProfileServiceImpl.forgotPassword()");
-		Profile profile = profileRepository.findByUsername(username);	
-		if(profile == null) {
+		Profile profile = profileRepository.findByUsername(username);
+		if (profile == null) {
 			return new BaseResponse<ProfileDTO>(HttpStatus.CONFLICT.value(), ApplicationConstants.ERROR);
 		}
 		String otp = OTPUtil.generateOTP(6);
-		LOGGER.debug("Generate OTP"+ otp);
-		profile.setOtp(otp);		
+		LOGGER.debug("Generate OTP" + otp);
+		profile.setOtp(otp);
 		profileRepository.save(profile);
 		LOGGER.debug("Sending Email with OTP");
 		sendEmail(profile.getFullName(), profile.getUsername(), otp, 3);
-		BaseResponse<ProfileDTO> response = new BaseResponse<ProfileDTO>(HttpStatus.OK.value(), ApplicationConstants.SUCCESS);		
+		BaseResponse<ProfileDTO> response = new BaseResponse<ProfileDTO>(HttpStatus.OK.value(),
+				ApplicationConstants.SUCCESS);
 		return response;
 	}
-	
+
 	@Override
-	public BaseResponse<ProfileDTO> setNewPassword(String username, SetNewPasswordDTO request){
+	public BaseResponse<ProfileDTO> setNewPassword(String username, SetNewPasswordDTO request) {
 		LOGGER.debug("Calling ProfileServiceImpl.setNewPassword()");
-		Profile profile = profileRepository.findByUsername(username);	
-		if(profile == null) {
+		Profile profile = profileRepository.findByUsername(username);
+		if (profile == null) {
 			return new BaseResponse<ProfileDTO>(HttpStatus.CONFLICT.value(), ApplicationConstants.ERROR);
 		}
 		profile.setPassword(bcryptEncoder.encode(request.getPassword()));
 		profileRepository.save(profile);
-		BaseResponse<ProfileDTO> response = new BaseResponse<ProfileDTO>(HttpStatus.OK.value(), ApplicationConstants.SUCCESS);		
+		BaseResponse<ProfileDTO> response = new BaseResponse<ProfileDTO>(HttpStatus.OK.value(),
+				ApplicationConstants.SUCCESS);
 		return response;
 	}
-	
+
 	@Override
-	public BaseResponse<ProfileDTO> otpVerification(String username, String otp){
+	public BaseResponse<ProfileDTO> otpVerification(String username, String otp) {
 		LOGGER.debug("Calling ProfileServiceImpl.setNewPassword()");
-		Profile profile = profileRepository.findByUsername(username);	
-		if(profile == null) {
+		Profile profile = profileRepository.findByUsername(username);
+		if (profile == null) {
 			return new BaseResponse<ProfileDTO>(HttpStatus.CONFLICT.value(), ApplicationConstants.ERROR);
 		}
 		BaseResponse<ProfileDTO> response = null;
-		if(otp != null && otp.equals(profile.getOtp())) {
+		if (otp != null && otp.equals(profile.getOtp())) {
 			profile.setOtp(null);
-			if(ProfileStatus.OTPVERIFICATION.equals(profile.getStatus())) {
+			if (ProfileStatus.OTPVERIFICATION.equals(profile.getStatus())) {
 				profile.setStatus(ProfileStatus.ACTIVE);
 			}
 			profileRepository.save(profile);
-			response = new BaseResponse<ProfileDTO>(HttpStatus.OK.value(), ApplicationConstants.SUCCESS);	
-		}
-		else {
+			response = new BaseResponse<ProfileDTO>(HttpStatus.OK.value(), ApplicationConstants.SUCCESS);
+		} else {
 			response = new BaseResponse<ProfileDTO>(HttpStatus.CONFLICT.value(), ApplicationConstants.ERROR);
-		}			
+		}
 		return response;
 	}
 

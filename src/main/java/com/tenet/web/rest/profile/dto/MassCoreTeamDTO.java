@@ -1,0 +1,46 @@
+package com.tenet.web.rest.profile.dto;
+
+import java.io.Serializable;
+
+public class MassCoreTeamDTO implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
+	private long id;
+	private String fullName;
+	private String contactNumber;
+	private boolean delete;
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+
+	public String getContactNumber() {
+		return contactNumber;
+	}
+
+	public void setContactNumber(String contactNumber) {
+		this.contactNumber = contactNumber;
+	}
+
+	public boolean isDelete() {
+		return delete;
+	}
+
+	public void setDelete(boolean delete) {
+		this.delete = delete;
+	}
+
+}

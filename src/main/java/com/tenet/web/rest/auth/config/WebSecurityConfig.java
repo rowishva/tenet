@@ -57,7 +57,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			// -- Tenet
 			"/profile/login", "/profile/register", "/profile/role/register", "/profile/send/new/otp/{username}",
 			"/profile/forgot/password", "/profile/set/new/password/{username}",
-			"/profile/otp/verification/{username}/{otp}" };
+			"/profile/otp/verification/{username}/{otp}", "/sendmailwithtemplate" };
 
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
