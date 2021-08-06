@@ -87,8 +87,8 @@ public class ModelMapEnumConverter {
 				}
 			}
 		};
-	}	
-	
+	}
+
 	public static Converter<Integer, MassStatus> convertIntToMassStatus() {
 		return new Converter<Integer, MassStatus>() {
 			@Override

@@ -5,10 +5,12 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tenet.web.rest.common.ServiceEndpoints;
@@ -30,7 +32,7 @@ public class DependentController {
 	private DependentService service;
 
 	@ApiOperation(value = "Create new List of Dependent", response = BaseResponse.class)
-	@RequestMapping(method = RequestMethod.POST)
+	@PostMapping
 	public BaseResponse<DependentDTO> createDependents(@PathVariable("profileId") Long profileId,
 			@RequestBody List<DependentDTO> request) {
 		LOGGER.debug("Calling DependentController.createDependents()");
@@ -38,7 +40,7 @@ public class DependentController {
 	}
 
 	@ApiOperation(value = "Update Profile", response = BaseResponse.class)
-	@RequestMapping(method = RequestMethod.PUT)
+	@PutMapping
 	public BaseResponse<DependentDTO> updateDependents(@PathVariable("profileId") Long profileId,
 			@RequestBody List<DependentDTO> request) {
 		LOGGER.debug("Calling DependentController.updateDependents()");
@@ -46,7 +48,7 @@ public class DependentController {
 	}
 
 	@ApiOperation(value = "Retrieve List of Dependent", response = BaseResponse.class)
-	@RequestMapping(method = RequestMethod.GET)
+	@GetMapping
 	public BaseResponse<DependentDTO> getDependents(@PathVariable("profileId") Long profileId) {
 		LOGGER.debug("Calling DependentController.getDependents()");
 		return service.getDependents(profileId);

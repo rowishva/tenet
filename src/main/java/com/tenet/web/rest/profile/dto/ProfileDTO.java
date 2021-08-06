@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -14,8 +18,11 @@ public class ProfileDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private long id;
+	@NotEmpty(message = "Full Name should not be empty")
 	private String fullName;
 	private String contactNumber;
+	@NotEmpty(message = "Username should not be empty")
+	@Email(message = "Username should be a valid Email")
 	private String username;
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
@@ -24,7 +31,9 @@ public class ProfileDTO implements Serializable {
 	private List<DependentDTO> dependents;
 	private String roleCode;
 	private int status;
+	@NotEmpty(message = "Community Category should not be empty")
 	private String communityCategory;
+	@NotNull(message = "Special Needs should not be NULL")
 	private int specialNeeds;
 
 	public long getId() {

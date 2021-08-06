@@ -16,6 +16,7 @@ import com.tenet.web.rest.common.ApplicationConstants;
 import com.tenet.web.rest.common.dto.response.BaseResponse;
 import com.tenet.web.rest.common.entity.MassCoreTeam;
 import com.tenet.web.rest.common.entity.MassTime;
+import com.tenet.web.rest.common.exception.ResourceNotFoundException;
 import com.tenet.web.rest.common.repository.MassCoreTeamRepository;
 import com.tenet.web.rest.common.repository.MassTimeRepository;
 import com.tenet.web.rest.profile.dto.MassCoreTeamDTO;
@@ -37,8 +38,8 @@ public class MassCoreTeamServiceImpl implements MassCoreTeamService {
 	@Override
 	public BaseResponse<MassCoreTeamDTO> createMassCoreTeam(Long massTimeId, List<MassCoreTeamDTO> request) {
 		LOGGER.debug("Calling MassCoreTeamServiceImpl.createMassCoreTeam()");
-		final MassTime massTime = massTimeRepository.getOne(massTimeId);
-
+		final MassTime massTime = massTimeRepository.findById(massTimeId).orElseThrow(
+				() -> new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_MASSTIME_NOT_FOUND + massTimeId));
 		List<MassCoreTeam> massCoreTeamList = request.stream()
 				.map(massCoreTeamDTO -> modelMapper.map(massCoreTeamDTO, MassCoreTeam.class))
 				.collect(Collectors.toList());
@@ -54,7 +55,8 @@ public class MassCoreTeamServiceImpl implements MassCoreTeamService {
 	@Override
 	public BaseResponse<MassCoreTeamDTO> updateMassCoreTeam(Long massTimeId, List<MassCoreTeamDTO> request) {
 		LOGGER.debug("Calling MassCoreTeamServiceImpl.updateMassCoreTeam()");
-		final MassTime massTime = massTimeRepository.getOne(massTimeId);
+		final MassTime massTime = massTimeRepository.findById(massTimeId).orElseThrow(
+				() -> new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_MASSTIME_NOT_FOUND + massTimeId));
 		List<MassCoreTeam> massCoreTeamList = new ArrayList<MassCoreTeam>();
 		for (MassCoreTeamDTO massCoreTeamDTO : request) {
 			MassCoreTeam massCoreTeam = massCoreTeamRepository.getOne(massCoreTeamDTO.getId());
@@ -81,10 +83,14 @@ public class MassCoreTeamServiceImpl implements MassCoreTeamService {
 	public BaseResponse<MassCoreTeamDTO> getAllMassCoreTeam(Long massTimeId) {
 		LOGGER.debug("Calling MassCoreTeamServiceImpl.getAllMassCoreTeam()");
 		List<MassCoreTeam> massCoreTeamList = massCoreTeamRepository.findByMassTimeId(massTimeId);
-		List<MassCoreTeamDTO> massCoreTeamDTOList = massCoreTeamList.stream()
-				.map(massCoreTeam -> modelMapper.map(massCoreTeam, MassCoreTeamDTO.class)).collect(Collectors.toList());
 		BaseResponse<MassCoreTeamDTO> response = new BaseResponse<MassCoreTeamDTO>(HttpStatus.OK.value(),
-				ApplicationConstants.SUCCESS, massCoreTeamDTOList);
+				ApplicationConstants.SUCCESS);
+		if (massCoreTeamList != null && massCoreTeamList.size() > 0) {
+			List<MassCoreTeamDTO> massCoreTeamDTOList = massCoreTeamList.stream()
+					.map(massCoreTeam -> modelMapper.map(massCoreTeam, MassCoreTeamDTO.class))
+					.collect(Collectors.toList());
+			response.setResponseList(massCoreTeamDTOList);
+		}
 		return response;
 	}
 

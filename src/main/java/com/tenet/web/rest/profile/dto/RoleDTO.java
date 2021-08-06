@@ -3,12 +3,16 @@ package com.tenet.web.rest.profile.dto;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.validation.constraints.NotEmpty;
+
 public class RoleDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	private long id;
+	@NotEmpty(message = "Role Code should not be empty")
 	private String roleCode;
+	@NotEmpty(message = "Description should not be empty")
 	private String description;
 	private List<String> privilege;
 

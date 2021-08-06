@@ -27,6 +27,6 @@ public class ModelMapperConfig {
 		modelMapper.addConverter(ModelMapEnumConverter.convertProfileStatusToInt());
 		modelMapper.addConverter(ModelMapEnumConverter.convertIntToMassStatus());
 		modelMapper.addConverter(ModelMapEnumConverter.convertMassStatusToInt());
-		
+
 	}
 }

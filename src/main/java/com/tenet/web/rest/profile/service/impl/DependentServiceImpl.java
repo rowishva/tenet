@@ -17,6 +17,7 @@ import com.tenet.web.rest.common.ApplicationConstants;
 import com.tenet.web.rest.common.dto.response.BaseResponse;
 import com.tenet.web.rest.common.entity.Dependent;
 import com.tenet.web.rest.common.entity.Profile;
+import com.tenet.web.rest.common.exception.ResourceNotFoundException;
 import com.tenet.web.rest.common.repository.DependentRepository;
 import com.tenet.web.rest.common.repository.ProfileRepository;
 import com.tenet.web.rest.profile.dto.DependentDTO;
@@ -40,7 +41,8 @@ public class DependentServiceImpl implements DependentService {
 	@Transactional
 	public BaseResponse<DependentDTO> createDependents(Long profileId, List<DependentDTO> request) {
 		LOGGER.debug("Calling DependentServiceImpl.createDependents()");
-		final Profile profile = profileRepository.getOne(profileId);
+		final Profile profile = profileRepository.findById(profileId).orElseThrow(
+				() -> new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_PROFILE_NOT_FOUND + profileId));
 		List<Dependent> dependentList = request.stream()
 				.map(dependentDTO -> (Dependent) modelMapper.map(dependentDTO, Dependent.class))
 				.collect(Collectors.toList());
@@ -58,7 +60,8 @@ public class DependentServiceImpl implements DependentService {
 	@Override
 	public BaseResponse<DependentDTO> updateDependents(Long profileId, List<DependentDTO> request) {
 		LOGGER.debug("Calling DependentServiceImpl.updateUser()");
-		final Profile profile = profileRepository.getOne(profileId);
+		final Profile profile = profileRepository.findById(profileId).orElseThrow(
+				() -> new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_PROFILE_NOT_FOUND + profileId));
 		List<Dependent> dependentList = new ArrayList<Dependent>();
 		for (DependentDTO dependentDTO : request) {
 			Dependent dependent = dependentRepository.getOne(dependentDTO.getId());
@@ -86,11 +89,14 @@ public class DependentServiceImpl implements DependentService {
 	public BaseResponse<DependentDTO> getDependents(Long profileId) {
 		LOGGER.debug("Calling DependentServiceImpl.getDependents()");
 		List<Dependent> dependentList = dependentRepository.findByProfileId(profileId);
-		List<DependentDTO> dependentDTOList = dependentList.stream()
-				.map(dependent -> (DependentDTO) modelMapper.map(dependent, DependentDTO.class))
-				.collect(Collectors.toList());
 		BaseResponse<DependentDTO> response = new BaseResponse<DependentDTO>(HttpStatus.OK.value(),
-				ApplicationConstants.SUCCESS, dependentDTOList);
+				ApplicationConstants.SUCCESS);
+		if (dependentList != null && dependentList.size() > 0) {
+			List<DependentDTO> dependentDTOList = dependentList.stream()
+					.map(dependent -> (DependentDTO) modelMapper.map(dependent, DependentDTO.class))
+					.collect(Collectors.toList());
+			response.setResponseList(dependentDTOList);
+		}
 		return response;
 	}
 

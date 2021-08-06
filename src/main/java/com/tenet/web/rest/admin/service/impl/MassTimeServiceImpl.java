@@ -17,6 +17,7 @@ import com.tenet.web.rest.admin.service.MassTimeService;
 import com.tenet.web.rest.common.ApplicationConstants;
 import com.tenet.web.rest.common.dto.response.BaseResponse;
 import com.tenet.web.rest.common.entity.MassTime;
+import com.tenet.web.rest.common.exception.ResourceNotFoundException;
 import com.tenet.web.rest.common.repository.MassTimeRepository;
 
 @Service
@@ -47,10 +48,8 @@ public class MassTimeServiceImpl implements MassTimeService {
 	public BaseResponse<MassTimeDTO> updateMassTime(Long id, MassTimeDTO request) {
 
 		LOGGER.debug("Calling MassTimeServiceImpl.updateMassTime()");
-		MassTime massTime = massTimeRepository.getOne(id);
-		if (massTime == null) {
-			return new BaseResponse<MassTimeDTO>(HttpStatus.CONFLICT.value(), ApplicationConstants.ERROR);
-		}
+		MassTime massTime = massTimeRepository.findById(id).orElseThrow(
+				() -> new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_MASSTIME_NOT_FOUND + id));
 		modelMapper.map(request, massTime);
 		massTime = massTimeRepository.save(massTime);
 		MassTimeDTO massTimeDTO = modelMapper.map(massTime, MassTimeDTO.class);
@@ -62,28 +61,25 @@ public class MassTimeServiceImpl implements MassTimeService {
 	@Override
 	public BaseResponse<MassTimeDTO> deleteMassTime(Long id) {
 		LOGGER.debug("Calling MassTimeServiceImpl.deleteMassTime()");
-		MassTime massTime = massTimeRepository.getOne(id);
-		BaseResponse<MassTimeDTO> response = null;
-		if (massTime != null) {
-			massTime.setDeleted(true);
-			massTime = massTimeRepository.save(massTime);
-			response = new BaseResponse<MassTimeDTO>(HttpStatus.NO_CONTENT.value(), ApplicationConstants.SUCCESS);
-		} else {
-			response = new BaseResponse<MassTimeDTO>(HttpStatus.CONFLICT.value(), ApplicationConstants.ERROR);
-		}
+		MassTime massTime = massTimeRepository.findById(id).orElseThrow(
+				() -> new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_MASSTIME_NOT_FOUND + id));
+		massTime.setDeleted(true);
+		massTime = massTimeRepository.save(massTime);
+		BaseResponse<MassTimeDTO> response = new BaseResponse<MassTimeDTO>(HttpStatus.NO_CONTENT.value(),
+				ApplicationConstants.SUCCESS);
 		return response;
 	}
 
 	@Override
 	public BaseResponse<MassTimeDTO> getMassTime(Long id) {
 		LOGGER.debug("Calling MassTimeServiceImpl.getMassTime()");
-		MassTime massTime = massTimeRepository.getOne(id);
-		BaseResponse<MassTimeDTO> response = null;
+		MassTime massTime = massTimeRepository.findById(id).orElseThrow(
+				() -> new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_MASSTIME_NOT_FOUND + id));
+		BaseResponse<MassTimeDTO> response = new BaseResponse<MassTimeDTO>(HttpStatus.OK.value(),
+				ApplicationConstants.SUCCESS);
 		if (massTime != null) {
 			MassTimeDTO massTimeDTO = modelMapper.map(massTime, MassTimeDTO.class);
-			response = new BaseResponse<MassTimeDTO>(HttpStatus.OK.value(), ApplicationConstants.SUCCESS, massTimeDTO);
-		} else {
-			response = new BaseResponse<MassTimeDTO>(HttpStatus.CONFLICT.value(), ApplicationConstants.ERROR);
+			response.setResponse(massTimeDTO);
 		}
 		return response;
 	}
@@ -92,14 +88,12 @@ public class MassTimeServiceImpl implements MassTimeService {
 	public BaseResponse<MassTimeDTO> getAllMassTime(Pageable pageable) {
 		LOGGER.debug("Calling MassTimeServiceImpl.getAllMassTime()");
 		Page<MassTime> massTimeList = massTimeRepository.findAll(pageable);
-		BaseResponse<MassTimeDTO> response = null;
+		BaseResponse<MassTimeDTO> response = new BaseResponse<MassTimeDTO>(HttpStatus.OK.value(),
+				ApplicationConstants.SUCCESS);
 		if (massTimeList != null) {
 			List<MassTimeDTO> massTimeDTOList = massTimeList.stream()
 					.map(massTime -> modelMapper.map(massTime, MassTimeDTO.class)).collect(Collectors.toList());
-			response = new BaseResponse<MassTimeDTO>(HttpStatus.OK.value(), ApplicationConstants.SUCCESS,
-					massTimeDTOList);
-		} else {
-			response = new BaseResponse<MassTimeDTO>(HttpStatus.CONFLICT.value(), ApplicationConstants.ERROR);
+			response.setResponseList(massTimeDTOList);
 		}
 		return response;
 	}

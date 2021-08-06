@@ -11,9 +11,7 @@ public class BaseResponse<T> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private int status;
-
 	private String message;
-
 	private T response;
 
 	private List<T> responseList;

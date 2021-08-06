@@ -26,6 +26,9 @@ import com.tenet.web.rest.common.entity.Dependent;
 import com.tenet.web.rest.common.entity.Profile;
 import com.tenet.web.rest.common.entity.Role;
 import com.tenet.web.rest.common.enums.ProfileStatus;
+import com.tenet.web.rest.common.exception.BadRequestException;
+import com.tenet.web.rest.common.exception.ResourceAlreadyExistsException;
+import com.tenet.web.rest.common.exception.ResourceNotFoundException;
 import com.tenet.web.rest.common.otp.OTPUtil;
 import com.tenet.web.rest.common.repository.DependentRepository;
 import com.tenet.web.rest.common.repository.ProfileRepository;
@@ -70,6 +73,11 @@ public class ProfileServiceImpl implements ProfileService {
 	@Transactional
 	public BaseResponse<ProfileDTO> createProfile(ProfileDTO request) {
 		LOGGER.debug("Calling ProfileServiceImpl.createProfile()");
+		Profile usernameCheck = profileRepository.findByUsername(request.getUsername());
+		if (usernameCheck != null) {
+			throw new ResourceAlreadyExistsException(
+					ApplicationConstants.ERROR_MSG_USERNAME_ALREADY_EXISTS + request.getUsername());
+		}
 		final Profile profile = (Profile) modelMapper.map(request, Profile.class);
 		profile.setPassword(bcryptEncoder.encode(request.getPassword()));
 		Role role = roleRepository.findByRoleCode("USER");
@@ -99,10 +107,8 @@ public class ProfileServiceImpl implements ProfileService {
 	@Override
 	public BaseResponse<ProfileDTO> updateProfile(Long id, ProfileUpdateDTO request) {
 		LOGGER.debug("Calling ProfileServiceImpl.updateUser()");
-		Profile profile = profileRepository.getOne(id);
-		if (profile == null) {
-			return new BaseResponse<ProfileDTO>(HttpStatus.CONFLICT.value(), ApplicationConstants.ERROR);
-		}
+		Profile profile = profileRepository.findById(id).orElseThrow(
+				() -> new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_PROFILE_NOT_FOUND + id));
 		modelMapper.map(request, profile);
 		List<DependentDTO> dependentDTOList = request.getDependents();
 		if (dependentDTOList != null && dependentDTOList.size() > 0) {
@@ -132,29 +138,23 @@ public class ProfileServiceImpl implements ProfileService {
 	@Override
 	public BaseResponse<ProfileDTO> deleteProfile(Long id) {
 		LOGGER.debug("Calling ProfileServiceImpl.deleteProfile()");
-		Profile profile = profileRepository.getOne(id);
+		Profile profile = profileRepository.findById(id).orElseThrow(
+				() -> new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_PROFILE_NOT_FOUND + id));
 		BaseResponse<ProfileDTO> response = null;
-		if (profile != null) {
-			profile.setDeleted(true);
-			profile = profileRepository.save(profile);
-			response = new BaseResponse<ProfileDTO>(HttpStatus.NO_CONTENT.value(), ApplicationConstants.SUCCESS);
-		} else {
-			response = new BaseResponse<ProfileDTO>(HttpStatus.CONFLICT.value(), ApplicationConstants.ERROR);
-		}
+		profile.setDeleted(true);
+		profile = profileRepository.save(profile);
+		response = new BaseResponse<ProfileDTO>(HttpStatus.NO_CONTENT.value(), ApplicationConstants.SUCCESS);
 		return response;
 	}
 
 	@Override
 	public BaseResponse<ProfileDTO> getProfile(Long id) {
 		LOGGER.debug("Calling ProfileServiceImpl.getProfile()");
-		Profile profile = profileRepository.getOne(id);
+		Profile profile = profileRepository.findById(id).orElseThrow(
+				() -> new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_PROFILE_NOT_FOUND + id));
 		BaseResponse<ProfileDTO> response = null;
-		if (profile != null) {
-			ProfileDTO profileDTO = (ProfileDTO) modelMapper.map(profile, ProfileDTO.class);
-			response = new BaseResponse<ProfileDTO>(HttpStatus.OK.value(), ApplicationConstants.SUCCESS, profileDTO);
-		} else {
-			response = new BaseResponse<ProfileDTO>(HttpStatus.CONFLICT.value(), ApplicationConstants.ERROR);
-		}
+		ProfileDTO profileDTO = modelMapper.map(profile, ProfileDTO.class);
+		response = new BaseResponse<ProfileDTO>(HttpStatus.OK.value(), ApplicationConstants.SUCCESS, profileDTO);
 		return response;
 	}
 
@@ -162,14 +162,12 @@ public class ProfileServiceImpl implements ProfileService {
 	public BaseResponse<ProfileDTO> getAllProfile(Pageable pageable) {
 		LOGGER.debug("Calling ProfileServiceImpl.getAllProfile()");
 		Page<Profile> profileList = profileRepository.findAll(pageable);
-		BaseResponse<ProfileDTO> response = null;
+		BaseResponse<ProfileDTO> response = new BaseResponse<ProfileDTO>(HttpStatus.OK.value(),
+				ApplicationConstants.SUCCESS);
 		if (profileList != null) {
 			List<ProfileDTO> profileDTOList = profileList.stream()
 					.map(profileDTO -> modelMapper.map(profileDTO, ProfileDTO.class)).collect(Collectors.toList());
-			response = new BaseResponse<ProfileDTO>(HttpStatus.OK.value(), ApplicationConstants.SUCCESS,
-					profileDTOList);
-		} else {
-			response = new BaseResponse<ProfileDTO>(HttpStatus.CONFLICT.value(), ApplicationConstants.ERROR);
+			response.setResponseList(profileDTOList);
 		}
 		return response;
 	}
@@ -179,7 +177,7 @@ public class ProfileServiceImpl implements ProfileService {
 		LOGGER.debug("Calling ProfileServiceImpl.sendNewOtp()");
 		Profile profile = profileRepository.findByUsername(username);
 		if (profile == null) {
-			return new BaseResponse<ProfileDTO>(HttpStatus.CONFLICT.value(), ApplicationConstants.ERROR);
+			throw new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_USERNAME_NOT_FOUND + username);
 		}
 		String otp = OTPUtil.generateOTP(6);
 		LOGGER.debug("Generate OTP" + otp);
@@ -197,7 +195,7 @@ public class ProfileServiceImpl implements ProfileService {
 		LOGGER.debug("Calling ProfileServiceImpl.forgotPassword()");
 		Profile profile = profileRepository.findByUsername(username);
 		if (profile == null) {
-			return new BaseResponse<ProfileDTO>(HttpStatus.CONFLICT.value(), ApplicationConstants.ERROR);
+			throw new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_USERNAME_NOT_FOUND + username);
 		}
 		String otp = OTPUtil.generateOTP(6);
 		LOGGER.debug("Generate OTP" + otp);
@@ -215,7 +213,7 @@ public class ProfileServiceImpl implements ProfileService {
 		LOGGER.debug("Calling ProfileServiceImpl.setNewPassword()");
 		Profile profile = profileRepository.findByUsername(username);
 		if (profile == null) {
-			return new BaseResponse<ProfileDTO>(HttpStatus.CONFLICT.value(), ApplicationConstants.ERROR);
+			throw new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_USERNAME_NOT_FOUND + username);
 		}
 		profile.setPassword(bcryptEncoder.encode(request.getPassword()));
 		profileRepository.save(profile);
@@ -226,10 +224,10 @@ public class ProfileServiceImpl implements ProfileService {
 
 	@Override
 	public BaseResponse<ProfileDTO> otpVerification(String username, String otp) {
-		LOGGER.debug("Calling ProfileServiceImpl.setNewPassword()");
+		LOGGER.debug("Calling ProfileServiceImpl.otpVerification()");
 		Profile profile = profileRepository.findByUsername(username);
 		if (profile == null) {
-			return new BaseResponse<ProfileDTO>(HttpStatus.CONFLICT.value(), ApplicationConstants.ERROR);
+			throw new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_USERNAME_NOT_FOUND + username);
 		}
 		BaseResponse<ProfileDTO> response = null;
 		if (otp != null && otp.equals(profile.getOtp())) {
@@ -240,7 +238,7 @@ public class ProfileServiceImpl implements ProfileService {
 			profileRepository.save(profile);
 			response = new BaseResponse<ProfileDTO>(HttpStatus.OK.value(), ApplicationConstants.SUCCESS);
 		} else {
-			response = new BaseResponse<ProfileDTO>(HttpStatus.CONFLICT.value(), ApplicationConstants.ERROR);
+			throw new BadRequestException(ApplicationConstants.ERROR_MSG_INVALID_OTP + otp);
 		}
 		return response;
 	}

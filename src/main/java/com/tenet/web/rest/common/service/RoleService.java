@@ -7,7 +7,7 @@ public interface RoleService {
 
 	public BaseResponse<RoleDTO> createRole(RoleDTO request);
 
-	public BaseResponse<RoleDTO> updateRole(RoleDTO request);
+	public BaseResponse<RoleDTO> updateRole(long id, RoleDTO request);
 
 	public BaseResponse<RoleDTO> deleteRole(long id);
 
