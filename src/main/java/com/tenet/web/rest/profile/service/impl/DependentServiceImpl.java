@@ -65,15 +65,16 @@ public class DependentServiceImpl implements DependentService {
 		List<Dependent> dependentList = new ArrayList<Dependent>();
 		for (DependentDTO dependentDTO : request) {
 			Dependent dependent = dependentRepository.getOne(dependentDTO.getId());
-			if (dependentDTO.isDelete()) {
-				dependent.setDeleted(true);
-			} else {
-				if (dependent == null) {
-					dependent = new Dependent();
-					dependent.setProfile(profile);
+			if(dependent != null) {
+				if (dependentDTO.isDelete()) {
+					dependent.setDeleted(true);
+				} else {
+					modelMapper.map(dependentDTO, dependent);					
 				}
-				modelMapper.map(dependentDTO, dependent);
-			}
+			} else {
+				dependent = modelMapper.map(dependentDTO, Dependent.class);
+				dependent.setProfile(profile);
+			}			
 			dependentList.add(dependent);
 		}
 		dependentList = dependentRepository.saveAll(dependentList);
