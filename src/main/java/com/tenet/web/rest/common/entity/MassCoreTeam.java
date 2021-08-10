@@ -32,7 +32,7 @@ public class MassCoreTeam extends BaseDomain {
 	@Column(name = "contact_number", length = 16)
 	private String contactNumber;
 
-	@ManyToOne(cascade = CascadeType.REMOVE)
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "mass_time_id", referencedColumnName = "id")
 	private MassTime massTime;
 

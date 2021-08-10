@@ -3,8 +3,6 @@ package com.tenet.web.rest.admin.controller;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tenet.web.rest.admin.dto.MassTimeDTO;
@@ -61,11 +60,11 @@ public class MassTimeController {
 	}
 
 	@ApiOperation(value = "Retrieve List of Mass Time", response = BaseResponse.class)
-	@GetMapping(value = ServiceEndpoints.PAGE)
-	public BaseResponse<MassTimeDTO> getAllMassTime(@PathVariable("pageNo") Integer pageNo,
-			@PathVariable("pageSize") Integer pageSize) {
+	@GetMapping
+	public BaseResponse<MassTimeDTO> getAllMassTime(@RequestParam(defaultValue = "0") Integer pageNo,
+			@RequestParam(defaultValue = "50") Integer pageSize, @RequestParam(defaultValue = "date") String sortBy,
+			@RequestParam(defaultValue = "DESC") String direction) {
 		LOGGER.debug("Calling MassTimeController.getAllMassTime()");
-		Pageable pageable = PageRequest.of(pageNo, pageSize);
-		return service.getAllMassTime(pageable);
+		return service.getAllMassTime(pageNo, pageSize, sortBy, direction);
 	}
 }

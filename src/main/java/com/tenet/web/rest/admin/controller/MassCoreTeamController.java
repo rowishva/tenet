@@ -1,10 +1,9 @@
 package com.tenet.web.rest.admin.controller;
 
-import java.util.List;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,23 +30,39 @@ public class MassCoreTeamController {
 	@Autowired
 	private MassCoreTeamService service;
 
-	@ApiOperation(value = "Create new List of Mass Core Team", response = BaseResponse.class)
+	@ApiOperation(value = "Create new Mass Core Team", response = BaseResponse.class)
 	@PostMapping
 	public BaseResponse<MassCoreTeamDTO> createMassCoreTeam(@PathVariable("massTimeId") Long massTimeId,
-			@RequestBody List<MassCoreTeamDTO> request) {
+			@RequestBody MassCoreTeamDTO request) {
 		LOGGER.debug("Calling MassCoreTeamController.createMassCoreTeam()");
 		return service.createMassCoreTeam(massTimeId, request);
 	}
 
-	@ApiOperation(value = "Update List of Mass Core Team", response = BaseResponse.class)
-	@PutMapping
+	@ApiOperation(value = "Update Mass Core Team", response = BaseResponse.class)
+	@PutMapping(value = ServiceEndpoints.MASSCORETEAM_ID)
 	public BaseResponse<MassCoreTeamDTO> updateMassCoreTeam(@PathVariable("massTimeId") Long massTimeId,
-			@RequestBody List<MassCoreTeamDTO> request) {
+			@PathVariable("massCoreTeamId") Long massCoreTeamId, @RequestBody MassCoreTeamDTO request) {
 		LOGGER.debug("Calling MassCoreTeamController.updateMassCoreTeam()");
-		return service.updateMassCoreTeam(massTimeId, request);
+		return service.updateMassCoreTeam(massTimeId, massCoreTeamId, request);
 	}
 
-	@ApiOperation(value = "Retrieve List of Mass Core Team", response = BaseResponse.class)
+	@ApiOperation(value = "Delete Mass Core Team", response = BaseResponse.class)
+	@DeleteMapping(value = ServiceEndpoints.MASSCORETEAM_ID)
+	public BaseResponse<MassCoreTeamDTO> deleteMassCoreTeam(@PathVariable("massTimeId") Long massTimeId,
+			@PathVariable("massCoreTeamId") Long massCoreTeamId) {
+		LOGGER.debug("Calling MassCoreTeamController.deleteMassCoreTeam()");
+		return service.deleteMassCoreTeam(massTimeId, massCoreTeamId);
+	}
+
+	@ApiOperation(value = "Get Mass Core Team", response = BaseResponse.class)
+	@GetMapping(value = ServiceEndpoints.MASSCORETEAM_ID)
+	public BaseResponse<MassCoreTeamDTO> getMassCoreTeam(@PathVariable("massTimeId") Long massTimeId,
+			@PathVariable("massCoreTeamId") Long massCoreTeamId) {
+		LOGGER.debug("Calling MassCoreTeamController.getMassCoreTeam()");
+		return service.getMassCoreTeam(massTimeId, massCoreTeamId);
+	}
+
+	@ApiOperation(value = "Get All Mass Core Team", response = BaseResponse.class)
 	@GetMapping
 	public BaseResponse<MassCoreTeamDTO> getAllMassCoreTeam(@PathVariable("massTimeId") Long massTimeId) {
 		LOGGER.debug("Calling MassCoreTeamController.getAllMassCoreTeam()");

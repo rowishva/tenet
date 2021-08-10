@@ -1,6 +1,5 @@
 package com.tenet.web.rest.profile.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,63 +38,68 @@ public class DependentServiceImpl implements DependentService {
 
 	@Override
 	@Transactional
-	public BaseResponse<DependentDTO> createDependents(Long profileId, List<DependentDTO> request) {
-		LOGGER.debug("Calling DependentServiceImpl.createDependents()");
+	public BaseResponse<DependentDTO> createDependent(Long profileId, DependentDTO request) {
+		LOGGER.debug("Calling DependentServiceImpl.createDependent()");
 		final Profile profile = profileRepository.findById(profileId).orElseThrow(
 				() -> new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_PROFILE_NOT_FOUND + profileId));
-		List<Dependent> dependentList = request.stream()
-				.map(dependentDTO -> (Dependent) modelMapper.map(dependentDTO, Dependent.class))
-				.collect(Collectors.toList());
-		dependentList.forEach(dependent -> dependent.setProfile(profile));
-		dependentList = dependentRepository.saveAll(dependentList);
-		List<DependentDTO> dependentDTOList = dependentList.stream()
-				.map(dependent -> (DependentDTO) modelMapper.map(dependent, DependentDTO.class))
-				.collect(Collectors.toList());
+		Dependent dependent = modelMapper.map(request, Dependent.class);
+		dependent.setProfile(profile);
+		dependent = dependentRepository.save(dependent);
+		DependentDTO dependentDTO = modelMapper.map(dependent, DependentDTO.class);
 		BaseResponse<DependentDTO> response = new BaseResponse<DependentDTO>(HttpStatus.CREATED.value(),
-				ApplicationConstants.SUCCESS, dependentDTOList);
+				ApplicationConstants.SUCCESS, dependentDTO);
 		return response;
 
 	}
+	
 
 	@Override
-	public BaseResponse<DependentDTO> updateDependents(Long profileId, List<DependentDTO> request) {
-		LOGGER.debug("Calling DependentServiceImpl.updateUser()");
-		final Profile profile = profileRepository.findById(profileId).orElseThrow(
-				() -> new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_PROFILE_NOT_FOUND + profileId));
-		List<Dependent> dependentList = new ArrayList<Dependent>();
-		for (DependentDTO dependentDTO : request) {
-			Dependent dependent = dependentRepository.getOne(dependentDTO.getId());
-			if(dependent != null) {
-				if (dependentDTO.isDelete()) {
-					dependent.setDeleted(true);
-				} else {
-					modelMapper.map(dependentDTO, dependent);					
-				}
-			} else {
-				dependent = modelMapper.map(dependentDTO, Dependent.class);
-				dependent.setProfile(profile);
-			}			
-			dependentList.add(dependent);
-		}
-		dependentList = dependentRepository.saveAll(dependentList);
-		List<DependentDTO> dependentDTOList = dependentList.stream()
-				.map(dependent -> (DependentDTO) modelMapper.map(dependent, DependentDTO.class))
-				.collect(Collectors.toList());
+	public BaseResponse<DependentDTO> updateDependent(Long profileId, Long dependentId, DependentDTO request) {
+		LOGGER.debug("Calling DependentServiceImpl.updateDependent()");
+		Dependent dependent = dependentRepository.findById(dependentId).orElseThrow(
+				() -> new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_DEPENDENT_NOT_FOUND + dependentId));
+		modelMapper.map(request, dependent);
+		// dependent.setProfile(profile);
+		dependent = dependentRepository.save(dependent);
+		DependentDTO dependentDTO = modelMapper.map(dependent, DependentDTO.class);
 		BaseResponse<DependentDTO> response = new BaseResponse<DependentDTO>(HttpStatus.OK.value(),
-				ApplicationConstants.SUCCESS, dependentDTOList);
+				ApplicationConstants.SUCCESS, dependentDTO);
 		return response;
 	}
 
 	@Override
-	public BaseResponse<DependentDTO> getDependents(Long profileId) {
+	public BaseResponse<DependentDTO> deleteDependent(Long profileId, Long dependentId) {
+		LOGGER.debug("Calling DependentServiceImpl.deleteDependent()");
+		Dependent dependent = dependentRepository.findById(dependentId).orElseThrow(
+				() -> new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_DEPENDENT_NOT_FOUND + dependentId));
+		dependent.setDeleted(true);
+		// dependent.setProfile(profile);
+		dependentRepository.save(dependent);
+		BaseResponse<DependentDTO> response = new BaseResponse<DependentDTO>(HttpStatus.NO_CONTENT.value(),
+				ApplicationConstants.SUCCESS);
+		return response;
+	}
+
+	@Override
+	public BaseResponse<DependentDTO> getDependent(Long profileId, Long dependentId) {
 		LOGGER.debug("Calling DependentServiceImpl.getDependents()");
+		Dependent dependent = dependentRepository.findById(dependentId).orElseThrow(
+				() -> new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_DEPENDENT_NOT_FOUND + dependentId));
+		DependentDTO dependentDTO = modelMapper.map(dependent, DependentDTO.class);
+		BaseResponse<DependentDTO> response = new BaseResponse<DependentDTO>(HttpStatus.OK.value(),
+				ApplicationConstants.SUCCESS, dependentDTO);
+		return response;
+	}
+
+	@Override
+	public BaseResponse<DependentDTO> getAllDependents(Long profileId) {
+		LOGGER.debug("Calling DependentServiceImpl.getAllDependents()");
 		List<Dependent> dependentList = dependentRepository.findByProfileId(profileId);
 		BaseResponse<DependentDTO> response = new BaseResponse<DependentDTO>(HttpStatus.OK.value(),
 				ApplicationConstants.SUCCESS);
-		if (dependentList != null && dependentList.size() > 0) {
+		if (dependentList != null) {
 			List<DependentDTO> dependentDTOList = dependentList.stream()
-					.map(dependent -> (DependentDTO) modelMapper.map(dependent, DependentDTO.class))
-					.collect(Collectors.toList());
+					.map(dependent -> modelMapper.map(dependent, DependentDTO.class)).collect(Collectors.toList());
 			response.setResponseList(dependentDTOList);
 		}
 		return response;

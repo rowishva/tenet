@@ -8,7 +8,9 @@ import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -85,8 +87,12 @@ public class MassTimeServiceImpl implements MassTimeService {
 	}
 
 	@Override
-	public BaseResponse<MassTimeDTO> getAllMassTime(Pageable pageable) {
+	public BaseResponse<MassTimeDTO> getAllMassTime(Integer pageNo, Integer pageSize, String sortBy, String direction) {
 		LOGGER.debug("Calling MassTimeServiceImpl.getAllMassTime()");
+		Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
+		if(direction.equals("ASC")) {
+			pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).ascending());
+		} 		
 		Page<MassTime> massTimeList = massTimeRepository.findAll(pageable);
 		BaseResponse<MassTimeDTO> response = new BaseResponse<MassTimeDTO>(HttpStatus.OK.value(),
 				ApplicationConstants.SUCCESS);

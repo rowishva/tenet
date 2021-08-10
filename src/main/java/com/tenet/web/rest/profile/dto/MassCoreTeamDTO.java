@@ -9,7 +9,6 @@ public class MassCoreTeamDTO implements Serializable {
 	private long id;
 	private String fullName;
 	private String contactNumber;
-	private boolean delete;
 
 	public long getId() {
 		return id;
@@ -33,14 +32,6 @@ public class MassCoreTeamDTO implements Serializable {
 
 	public void setContactNumber(String contactNumber) {
 		this.contactNumber = contactNumber;
-	}
-
-	public boolean isDelete() {
-		return delete;
-	}
-
-	public void setDelete(boolean delete) {
-		this.delete = delete;
 	}
 
 }

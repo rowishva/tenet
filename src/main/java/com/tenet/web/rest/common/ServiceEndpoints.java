@@ -16,6 +16,8 @@ public final class ServiceEndpoints {
 	public static final String ADMIN_MASS_CORE_TEAM = "admin/masscoreteam/{massTimeId}";
 
 	public static final String ID = "/{id}";
+	public static final String DEPENDENT_ID = "/{dependentId}";
+	public static final String MASSCORETEAM_ID = "/{massCoreTeamId}";	
 	public static final String PAGE = "/{pageNo}/{pageSize}";
 
 }

@@ -20,8 +20,6 @@ public class DependentDTO implements Serializable {
 	private String contactNumber;
 	private String communityCategory;
 	private int specialNeeds;
-	@JsonProperty(access = Access.WRITE_ONLY)
-	private boolean delete;
 
 	public long getId() {
 		return id;
@@ -79,11 +77,4 @@ public class DependentDTO implements Serializable {
 		this.specialNeeds = specialNeeds;
 	}
 
-	public boolean isDelete() {
-		return delete;
-	}
-
-	public void setDelete(boolean delete) {
-		this.delete = delete;
-	}
 }

@@ -83,14 +83,7 @@ public class ProfileServiceImpl implements ProfileService {
 		Role role = roleRepository.findByRoleCode("USER");
 		profile.setRole(role);
 		profile.setStatus(ProfileStatus.OTPVERIFICATION);
-		List<DependentDTO> dependentDTOList = request.getDependents();
-		if (dependentDTOList != null && dependentDTOList.size() > 0) {
-			List<Dependent> dependentList = dependentDTOList.stream()
-					.map(dependentDTO -> (Dependent) modelMapper.map(dependentDTO, Dependent.class))
-					.collect(Collectors.toList());
-			dependentList.forEach(dependent -> dependent.setProfile(profile));
-			profile.setDependents(dependentList);
-		}
+		
 		String otp = OTPUtil.generateOTP(6);
 		LOGGER.debug("Generate OTP" + otp);
 		profile.setOtp(otp);
@@ -109,25 +102,7 @@ public class ProfileServiceImpl implements ProfileService {
 		LOGGER.debug("Calling ProfileServiceImpl.updateUser()");
 		Profile profile = profileRepository.findById(id).orElseThrow(
 				() -> new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_PROFILE_NOT_FOUND + id));
-		modelMapper.map(request, profile);
-		List<DependentDTO> dependentDTOList = request.getDependents();
-		if (dependentDTOList != null && dependentDTOList.size() > 0) {
-			List<Dependent> dependentList = new ArrayList<Dependent>();
-			for (DependentDTO dependentDTO : dependentDTOList) {
-				Dependent dependent = dependentRepository.getOne(dependentDTO.getId());
-				if (dependentDTO.isDelete()) {
-					dependent.setDeleted(true);
-				} else {
-					if (dependent == null) {
-						dependent = new Dependent();
-						dependent.setProfile(profile);
-					}
-					modelMapper.map(dependentDTO, dependent);
-				}
-				dependentList.add(dependent);
-			}
-			profile.setDependents(dependentList);
-		}
+		modelMapper.map(request, profile);		
 		profile = profileRepository.save(profile);
 		ProfileDTO profileDTO = (ProfileDTO) modelMapper.map(profile, ProfileDTO.class);
 		BaseResponse<ProfileDTO> response = new BaseResponse<ProfileDTO>(HttpStatus.OK.value(),

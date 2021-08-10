@@ -36,46 +36,56 @@ public class MassCoreTeamServiceImpl implements MassCoreTeamService {
 	private MassTimeRepository massTimeRepository;
 
 	@Override
-	public BaseResponse<MassCoreTeamDTO> createMassCoreTeam(Long massTimeId, List<MassCoreTeamDTO> request) {
+	public BaseResponse<MassCoreTeamDTO> createMassCoreTeam(Long massTimeId, MassCoreTeamDTO request) {
 		LOGGER.debug("Calling MassCoreTeamServiceImpl.createMassCoreTeam()");
 		final MassTime massTime = massTimeRepository.findById(massTimeId).orElseThrow(
-				() -> new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_MASSTIME_NOT_FOUND + massTimeId));
-		List<MassCoreTeam> massCoreTeamList = request.stream()
-				.map(massCoreTeamDTO -> modelMapper.map(massCoreTeamDTO, MassCoreTeam.class))
-				.collect(Collectors.toList());
-		massCoreTeamList.forEach(massCoreTeam -> massCoreTeam.setMassTime(massTime));
-		massCoreTeamList = massCoreTeamRepository.saveAll(massCoreTeamList);
-		List<MassCoreTeamDTO> massCoreTeamDTOList = massCoreTeamList.stream()
-				.map(massCoreTeam -> modelMapper.map(massCoreTeam, MassCoreTeamDTO.class)).collect(Collectors.toList());
+				() -> new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_MASSTIME_NOT_FOUND + massTimeId));		
+		
+		MassCoreTeam massCoreTeam = modelMapper.map(request, MassCoreTeam.class);
+		massCoreTeam.setMassTime(massTime);
+		massCoreTeam = massCoreTeamRepository.save(massCoreTeam);
+		
+		MassCoreTeamDTO massCoreTeamDTO = modelMapper.map(massCoreTeam, MassCoreTeamDTO.class);
 		BaseResponse<MassCoreTeamDTO> response = new BaseResponse<MassCoreTeamDTO>(HttpStatus.CREATED.value(),
-				ApplicationConstants.SUCCESS, massCoreTeamDTOList);
+				ApplicationConstants.SUCCESS, massCoreTeamDTO);
 		return response;
 	}
 
 	@Override
-	public BaseResponse<MassCoreTeamDTO> updateMassCoreTeam(Long massTimeId, List<MassCoreTeamDTO> request) {
+	public BaseResponse<MassCoreTeamDTO> updateMassCoreTeam(Long massTimeId, Long massCoreTeamId, MassCoreTeamDTO request) {
 		LOGGER.debug("Calling MassCoreTeamServiceImpl.updateMassCoreTeam()");
-		final MassTime massTime = massTimeRepository.findById(massTimeId).orElseThrow(
-				() -> new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_MASSTIME_NOT_FOUND + massTimeId));
-		List<MassCoreTeam> massCoreTeamList = new ArrayList<MassCoreTeam>();
-		for (MassCoreTeamDTO massCoreTeamDTO : request) {
-			MassCoreTeam massCoreTeam = massCoreTeamRepository.getOne(massCoreTeamDTO.getId());
-			if (massCoreTeam == null) {
-				massCoreTeam = new MassCoreTeam();
-				massCoreTeam.setMassTime(massTime);
-			} else {
-				if (massCoreTeamDTO.isDelete()) {
-					massCoreTeam.setDeleted(true);
-				}
-			}
-			modelMapper.map(massCoreTeamDTO, massCoreTeam);
-			massCoreTeamList.add(massCoreTeam);
-		}
-		massCoreTeamList = massCoreTeamRepository.saveAll(massCoreTeamList);
-		List<MassCoreTeamDTO> massCoreTeamDTOList = massCoreTeamList.stream()
-				.map(massCoreTeam -> modelMapper.map(massCoreTeam, MassCoreTeamDTO.class)).collect(Collectors.toList());
+		MassCoreTeam massCoreTeam = massCoreTeamRepository.findById(massTimeId).orElseThrow(
+				() -> new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_MASSCORETEAM_NOT_FOUND + massCoreTeamId));
+		
+		modelMapper.map(request, massCoreTeam);		
+		massCoreTeam = massCoreTeamRepository.save(massCoreTeam);
+		MassCoreTeamDTO massCoreTeamDTO = modelMapper.map(massCoreTeam, MassCoreTeamDTO.class);
 		BaseResponse<MassCoreTeamDTO> response = new BaseResponse<MassCoreTeamDTO>(HttpStatus.OK.value(),
-				ApplicationConstants.SUCCESS, massCoreTeamDTOList);
+				ApplicationConstants.SUCCESS, massCoreTeamDTO);
+		return response;
+	}
+	
+	@Override
+	public BaseResponse<MassCoreTeamDTO> deleteMassCoreTeam(Long massTimeId, Long massCoreTeamId) {
+		LOGGER.debug("Calling MassCoreTeamServiceImpl.updateMassCoreTeam()");
+		MassCoreTeam massCoreTeam = massCoreTeamRepository.findById(massCoreTeamId).orElseThrow(
+				() -> new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_MASSCORETEAM_NOT_FOUND + massCoreTeamId));
+		
+		massCoreTeam.setDeleted(true);	
+		massCoreTeamRepository.save(massCoreTeam);
+		BaseResponse<MassCoreTeamDTO> response = new BaseResponse<MassCoreTeamDTO>(HttpStatus.NO_CONTENT.value(),
+				ApplicationConstants.SUCCESS);
+		return response;
+	}
+	
+	@Override
+	public BaseResponse<MassCoreTeamDTO> getMassCoreTeam(Long massTimeId, Long massCoreTeamId) {
+		LOGGER.debug("Calling MassCoreTeamServiceImpl.getAllMassCoreTeam()");
+		MassCoreTeam massCoreTeam = massCoreTeamRepository.findById(massCoreTeamId).orElseThrow(
+				() -> new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_MASSCORETEAM_NOT_FOUND + massCoreTeamId));
+		MassCoreTeamDTO massCoreTeamDTO = modelMapper.map(massCoreTeam, MassCoreTeamDTO.class);
+		BaseResponse<MassCoreTeamDTO> response = new BaseResponse<MassCoreTeamDTO>(HttpStatus.OK.value(),
+				ApplicationConstants.SUCCESS, massCoreTeamDTO);		
 		return response;
 	}
 
