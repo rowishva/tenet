@@ -44,7 +44,7 @@ public class Dependent extends BaseDomain {
 	@Column(name = "relationship", length = 50)
 	private String relationship;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
+	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(name = "profile_id")
 	private Profile profile;
 

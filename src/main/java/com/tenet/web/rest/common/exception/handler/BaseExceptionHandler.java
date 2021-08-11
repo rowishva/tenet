@@ -52,8 +52,9 @@ public class BaseExceptionHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(RuntimeException.class)
 	public final ResponseEntity<BaseExceptionResponse> handleAllExceptions(RuntimeException exception,
 			WebRequest request) {
-		return new ResponseEntity<BaseExceptionResponse>(
-				buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, exception, request), HttpStatus.INTERNAL_SERVER_ERROR);
+		BaseExceptionResponse response = buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, exception, request);
+		response.setErrorMessage(ApplicationConstants.ERROR_MSG_INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<BaseExceptionResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@Override

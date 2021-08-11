@@ -1,6 +1,5 @@
 package com.tenet.web.rest.profile.service.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Service;
 import com.tenet.web.rest.common.ApplicationConstants;
 import com.tenet.web.rest.common.dto.Email;
 import com.tenet.web.rest.common.dto.response.BaseResponse;
-import com.tenet.web.rest.common.entity.Dependent;
 import com.tenet.web.rest.common.entity.Profile;
 import com.tenet.web.rest.common.entity.Role;
 import com.tenet.web.rest.common.enums.ProfileStatus;
@@ -30,11 +28,9 @@ import com.tenet.web.rest.common.exception.BadRequestException;
 import com.tenet.web.rest.common.exception.ResourceAlreadyExistsException;
 import com.tenet.web.rest.common.exception.ResourceNotFoundException;
 import com.tenet.web.rest.common.otp.OTPUtil;
-import com.tenet.web.rest.common.repository.DependentRepository;
 import com.tenet.web.rest.common.repository.ProfileRepository;
 import com.tenet.web.rest.common.repository.RoleRepository;
 import com.tenet.web.rest.common.service.EmailService;
-import com.tenet.web.rest.profile.dto.DependentDTO;
 import com.tenet.web.rest.profile.dto.ProfileDTO;
 import com.tenet.web.rest.profile.dto.ProfileUpdateDTO;
 import com.tenet.web.rest.profile.dto.SetNewPasswordDTO;
@@ -60,9 +56,6 @@ public class ProfileServiceImpl implements ProfileService {
 	@Autowired
 	private EmailService emailService;
 
-	@Autowired
-	private DependentRepository dependentRepository;
-
 	@Value("${profile.create.send.email.from}")
 	private String emailFrom;
 
@@ -83,7 +76,7 @@ public class ProfileServiceImpl implements ProfileService {
 		Role role = roleRepository.findByRoleCode("USER");
 		profile.setRole(role);
 		profile.setStatus(ProfileStatus.OTPVERIFICATION);
-		
+
 		String otp = OTPUtil.generateOTP(6);
 		LOGGER.debug("Generate OTP" + otp);
 		profile.setOtp(otp);
@@ -102,7 +95,7 @@ public class ProfileServiceImpl implements ProfileService {
 		LOGGER.debug("Calling ProfileServiceImpl.updateUser()");
 		Profile profile = profileRepository.findById(id).orElseThrow(
 				() -> new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_PROFILE_NOT_FOUND + id));
-		modelMapper.map(request, profile);		
+		modelMapper.map(request, profile);
 		profile = profileRepository.save(profile);
 		ProfileDTO profileDTO = (ProfileDTO) modelMapper.map(profile, ProfileDTO.class);
 		BaseResponse<ProfileDTO> response = new BaseResponse<ProfileDTO>(HttpStatus.OK.value(),

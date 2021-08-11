@@ -1,6 +1,5 @@
 package com.tenet.web.rest.admin.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,12 +38,12 @@ public class MassCoreTeamServiceImpl implements MassCoreTeamService {
 	public BaseResponse<MassCoreTeamDTO> createMassCoreTeam(Long massTimeId, MassCoreTeamDTO request) {
 		LOGGER.debug("Calling MassCoreTeamServiceImpl.createMassCoreTeam()");
 		final MassTime massTime = massTimeRepository.findById(massTimeId).orElseThrow(
-				() -> new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_MASSTIME_NOT_FOUND + massTimeId));		
-		
+				() -> new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_MASSTIME_NOT_FOUND + massTimeId));
+
 		MassCoreTeam massCoreTeam = modelMapper.map(request, MassCoreTeam.class);
 		massCoreTeam.setMassTime(massTime);
 		massCoreTeam = massCoreTeamRepository.save(massCoreTeam);
-		
+
 		MassCoreTeamDTO massCoreTeamDTO = modelMapper.map(massCoreTeam, MassCoreTeamDTO.class);
 		BaseResponse<MassCoreTeamDTO> response = new BaseResponse<MassCoreTeamDTO>(HttpStatus.CREATED.value(),
 				ApplicationConstants.SUCCESS, massCoreTeamDTO);
@@ -52,40 +51,44 @@ public class MassCoreTeamServiceImpl implements MassCoreTeamService {
 	}
 
 	@Override
-	public BaseResponse<MassCoreTeamDTO> updateMassCoreTeam(Long massTimeId, Long massCoreTeamId, MassCoreTeamDTO request) {
+	public BaseResponse<MassCoreTeamDTO> updateMassCoreTeam(Long massTimeId, Long massCoreTeamId,
+			MassCoreTeamDTO request) {
 		LOGGER.debug("Calling MassCoreTeamServiceImpl.updateMassCoreTeam()");
-		MassCoreTeam massCoreTeam = massCoreTeamRepository.findById(massTimeId).orElseThrow(
-				() -> new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_MASSCORETEAM_NOT_FOUND + massCoreTeamId));
-		
-		modelMapper.map(request, massCoreTeam);		
+		MassCoreTeam massCoreTeam = massCoreTeamRepository.findById(massTimeId)
+				.orElseThrow(() -> new ResourceNotFoundException(
+						ApplicationConstants.ERROR_MSG_MASSCORETEAM_NOT_FOUND + massCoreTeamId));
+
+		modelMapper.map(request, massCoreTeam);
 		massCoreTeam = massCoreTeamRepository.save(massCoreTeam);
 		MassCoreTeamDTO massCoreTeamDTO = modelMapper.map(massCoreTeam, MassCoreTeamDTO.class);
 		BaseResponse<MassCoreTeamDTO> response = new BaseResponse<MassCoreTeamDTO>(HttpStatus.OK.value(),
 				ApplicationConstants.SUCCESS, massCoreTeamDTO);
 		return response;
 	}
-	
+
 	@Override
 	public BaseResponse<MassCoreTeamDTO> deleteMassCoreTeam(Long massTimeId, Long massCoreTeamId) {
 		LOGGER.debug("Calling MassCoreTeamServiceImpl.updateMassCoreTeam()");
-		MassCoreTeam massCoreTeam = massCoreTeamRepository.findById(massCoreTeamId).orElseThrow(
-				() -> new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_MASSCORETEAM_NOT_FOUND + massCoreTeamId));
-		
-		massCoreTeam.setDeleted(true);	
+		MassCoreTeam massCoreTeam = massCoreTeamRepository.findById(massCoreTeamId)
+				.orElseThrow(() -> new ResourceNotFoundException(
+						ApplicationConstants.ERROR_MSG_MASSCORETEAM_NOT_FOUND + massCoreTeamId));
+
+		massCoreTeam.setDeleted(true);
 		massCoreTeamRepository.save(massCoreTeam);
 		BaseResponse<MassCoreTeamDTO> response = new BaseResponse<MassCoreTeamDTO>(HttpStatus.NO_CONTENT.value(),
 				ApplicationConstants.SUCCESS);
 		return response;
 	}
-	
+
 	@Override
 	public BaseResponse<MassCoreTeamDTO> getMassCoreTeam(Long massTimeId, Long massCoreTeamId) {
 		LOGGER.debug("Calling MassCoreTeamServiceImpl.getAllMassCoreTeam()");
-		MassCoreTeam massCoreTeam = massCoreTeamRepository.findById(massCoreTeamId).orElseThrow(
-				() -> new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_MASSCORETEAM_NOT_FOUND + massCoreTeamId));
+		MassCoreTeam massCoreTeam = massCoreTeamRepository.findById(massCoreTeamId)
+				.orElseThrow(() -> new ResourceNotFoundException(
+						ApplicationConstants.ERROR_MSG_MASSCORETEAM_NOT_FOUND + massCoreTeamId));
 		MassCoreTeamDTO massCoreTeamDTO = modelMapper.map(massCoreTeam, MassCoreTeamDTO.class);
 		BaseResponse<MassCoreTeamDTO> response = new BaseResponse<MassCoreTeamDTO>(HttpStatus.OK.value(),
-				ApplicationConstants.SUCCESS, massCoreTeamDTO);		
+				ApplicationConstants.SUCCESS, massCoreTeamDTO);
 		return response;
 	}
 

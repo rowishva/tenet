@@ -90,9 +90,9 @@ public class MassTimeServiceImpl implements MassTimeService {
 	public BaseResponse<MassTimeDTO> getAllMassTime(Integer pageNo, Integer pageSize, String sortBy, String direction) {
 		LOGGER.debug("Calling MassTimeServiceImpl.getAllMassTime()");
 		Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
-		if(direction.equals("ASC")) {
+		if (direction.equals("ASC")) {
 			pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).ascending());
-		} 		
+		}
 		Page<MassTime> massTimeList = massTimeRepository.findAll(pageable);
 		BaseResponse<MassTimeDTO> response = new BaseResponse<MassTimeDTO>(HttpStatus.OK.value(),
 				ApplicationConstants.SUCCESS);

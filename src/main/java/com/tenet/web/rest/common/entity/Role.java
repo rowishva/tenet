@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.TypeDef;
@@ -22,14 +21,13 @@ import com.vladmihalcea.hibernate.type.json.JsonType;
 @Table(name = "mst_role")
 @TypeDef(typeClass = JsonType.class, defaultForType = JsonNode.class)
 @Where(clause = "is_deleted=0")
-@SequenceGenerator(name = "role_sequence_generator", sequenceName = "role_sequence", initialValue = 1, allocationSize = 1)
 public class Role extends BaseDomain {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_sequence_generator")
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
 	@Column(name = "role_code", length = 10, nullable = false)

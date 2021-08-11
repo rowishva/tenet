@@ -1,4 +1,4 @@
-package com.tenet.web.rest.common.controller;
+package com.tenet.web.rest.admin.controller;
 
 import javax.validation.Valid;
 

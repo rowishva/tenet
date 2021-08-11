@@ -51,7 +51,6 @@ public class DependentServiceImpl implements DependentService {
 		return response;
 
 	}
-	
 
 	@Override
 	public BaseResponse<DependentDTO> updateDependent(Long profileId, Long dependentId, DependentDTO request) {

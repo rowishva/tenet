@@ -24,9 +24,11 @@ public interface ApplicationConstants {
 	public static final String ERROR_MSG_INVALID_OTP = "Invalid OTP :";
 	public static final String ERROR_MSG_MASSTIME_NOT_FOUND = "Mass Time Not Found, Invalid Id :";
 	public static final String ERROR_MSG_MASSCORETEAM_NOT_FOUND = "Mass Core Team Not Found, Invalid Id :";
-	
+	public static final String ERROR_MSG_COMMUNITYALLOCATION_NOT_FOUND = "Community Allocation Not Found, Invalid Id :";
 	public static final String ERROR_MSG_USERNAME_ALREADY_EXISTS = "Username Already Exists, Username :";
 	public static final String ERROR_MSG_MALFORMED_JSON_REQUEST = "Malformed JSON request";
 	public static final String ERROR_MSG_ROLE_NOT_FOUND = "Role Not Found, Invalid Id :";
+	public static final String ERROR_MSG_INTERNAL_SERVER_ERROR = "Internal Server error Please contact administrator";
+	public static final String ERROR_MSG_GLOBALPARAMETER_NOT_FOUND = "Global Parameter Not Found, Invalid Id :";
 
 }

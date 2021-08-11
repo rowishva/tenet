@@ -5,10 +5,12 @@ DROP TABLE IF EXISTS `trn_profile`;
 DROP TABLE IF EXISTS `mst_role`;
 DROP TABLE IF EXISTS `trn_mass_core_team`;
 DROP TABLE IF EXISTS `trn_mass_time`;
+DROP TABLE IF EXISTS `mst_community_allocation`;
+DROP TABLE IF EXISTS `mst_global_parameter`;
+
 --Drop sequence --
 DROP TABLE IF EXISTS `dependent_sequence`;
 DROP TABLE IF EXISTS `profile_sequence`;
-DROP TABLE IF EXISTS `role_sequence`;
 DROP TABLE IF EXISTS `mass_time_sequence`;
 DROP TABLE IF EXISTS `mass_core_team_sequence`;
 
@@ -18,10 +20,6 @@ CREATE TABLE `dependent_sequence` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `profile_sequence` (
-  `next_val` bigint DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-CREATE TABLE `role_sequence` (
   `next_val` bigint DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -125,4 +123,34 @@ CREATE TABLE `trn_mass_core_team` (
   KEY `FK_trn_mass_time_mass_time_id` (`mass_time_id`),
   CONSTRAINT `FK_trn_mass_time_mass_time_id` FOREIGN KEY (`mass_time_id`) REFERENCES `trn_mass_time` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `mst_community_allocation` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `create_time` datetime(6) NOT NULL,
+  `created_by_user` varchar(255) NOT NULL,
+  `is_deleted` bit(1) DEFAULT NULL,
+  `update_time` datetime(6) DEFAULT NULL,
+  `updated_by_user` varchar(255) DEFAULT NULL,
+  `version_number` bigint DEFAULT NULL,
+  `description` varchar(50) NOT NULL,
+  `code` varchar(10) NOT NULL,
+  `total_allocation` int DEFAULT NULL,
+  `available_allocation` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `mst_global_parameter` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `create_time` datetime(6) NOT NULL,
+  `created_by_user` varchar(255) NOT NULL,
+  `is_deleted` bit(1) DEFAULT NULL,
+  `update_time` datetime(6) DEFAULT NULL,
+  `updated_by_user` varchar(255) DEFAULT NULL,
+  `version_number` bigint DEFAULT NULL,
+  `description` varchar(50) NOT NULL,
+  `code` varchar(10) NOT NULL,
+  `parameter_value` varchar(10) NOT NULL, 
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 
