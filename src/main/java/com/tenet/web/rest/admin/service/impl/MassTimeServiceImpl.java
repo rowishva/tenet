@@ -8,9 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -18,9 +16,12 @@ import com.tenet.web.rest.admin.dto.MassTimeDTO;
 import com.tenet.web.rest.admin.service.MassTimeService;
 import com.tenet.web.rest.common.ApplicationConstants;
 import com.tenet.web.rest.common.dto.response.BaseResponse;
+import com.tenet.web.rest.common.dto.response.BaseResponsePage;
 import com.tenet.web.rest.common.entity.MassTime;
+import com.tenet.web.rest.common.exception.ResourceAlreadyExistsException;
 import com.tenet.web.rest.common.exception.ResourceNotFoundException;
 import com.tenet.web.rest.common.repository.MassTimeRepository;
+import com.tenet.web.rest.common.specification.MassTimeSerachSpec;
 
 @Service
 public class MassTimeServiceImpl implements MassTimeService {
@@ -37,6 +38,11 @@ public class MassTimeServiceImpl implements MassTimeService {
 	public BaseResponse<MassTimeDTO> createMassTime(MassTimeDTO request) {
 
 		LOGGER.debug("Calling MassTimeServiceImpl.createMassTime()");
+		long duplicateCount = massTimeRepository.countByDateAndTime(request.getDate(), request.getTime());
+		if (duplicateCount > 0) {
+			throw new ResourceAlreadyExistsException(
+					ApplicationConstants.ERROR_MSG_MASSTIME_FOUND + request.getDate() + request.getTime());
+		}
 		MassTime massTime = modelMapper.map(request, MassTime.class);
 		massTime.setAvailableCapacity(request.getTotalCapacity());
 		massTime = massTimeRepository.save(massTime);
@@ -87,19 +93,16 @@ public class MassTimeServiceImpl implements MassTimeService {
 	}
 
 	@Override
-	public BaseResponse<MassTimeDTO> getAllMassTime(Integer pageNo, Integer pageSize, String sortBy, String direction) {
-		LOGGER.debug("Calling MassTimeServiceImpl.getAllMassTime()");
-		Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
-		if (direction.equals("ASC")) {
-			pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).ascending());
-		}
-		Page<MassTime> massTimeList = massTimeRepository.findAll(pageable);
-		BaseResponse<MassTimeDTO> response = new BaseResponse<MassTimeDTO>(HttpStatus.OK.value(),
+	public BaseResponsePage<MassTimeDTO> searchMassTime(MassTimeSerachSpec spec, Pageable pageable) {
+		Page<MassTime> massTimePage = massTimeRepository.findAll(spec, pageable);
+		BaseResponsePage<MassTimeDTO> response = new BaseResponsePage<MassTimeDTO>(HttpStatus.OK.value(),
 				ApplicationConstants.SUCCESS);
-		if (massTimeList != null) {
-			List<MassTimeDTO> massTimeDTOList = massTimeList.stream()
+		if (massTimePage != null) {
+			List<MassTimeDTO> massTimeDTOList = massTimePage.stream()
 					.map(massTime -> modelMapper.map(massTime, MassTimeDTO.class)).collect(Collectors.toList());
 			response.setResponseList(massTimeDTOList);
+			response.setTotalElements(massTimePage.getTotalElements());
+			response.setTotalPages(massTimePage.getTotalPages());
 		}
 		return response;
 	}

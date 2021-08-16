@@ -1,6 +1,7 @@
 package com.tenet.web.rest.common.entity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +56,7 @@ public class Profile extends BaseDomain {
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	private LocalDate dateOfBirth;
 
-	@OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Dependent> dependents;
 
 	@ManyToOne
@@ -75,6 +76,12 @@ public class Profile extends BaseDomain {
 
 	@Column(name = "otp", length = 10)
 	private String otp;
+
+	@Column(name = "reset_token", length = 40)
+	private String resetToken;
+
+	@Column(name = "reset_token_create_time")
+	private LocalDateTime resetTokenCreateTime;
 
 	public Long getId() {
 		return id;
@@ -175,4 +182,19 @@ public class Profile extends BaseDomain {
 		this.otp = otp;
 	}
 
+	public String getResetToken() {
+		return resetToken;
+	}
+
+	public void setResetToken(String resetToken) {
+		this.resetToken = resetToken;
+	}
+
+	public LocalDateTime getResetTokenCreateTime() {
+		return resetTokenCreateTime;
+	}
+
+	public void setResetTokenCreateTime(LocalDateTime resetTokenCreateTime) {
+		this.resetTokenCreateTime = resetTokenCreateTime;
+	}
 }

@@ -66,6 +66,8 @@ CREATE TABLE `trn_profile` (
   `username` varchar(50) DEFAULT NULL,
   `role_id` bigint DEFAULT NULL,
   `otp` varchar(10) DEFAULT NULL,
+  `reset_token` varchar(100) DEFAULT NULL,
+  `reset_token_create_time` datetime(6) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_trn_profile_username` (`username`),
   KEY `FK_trn_profile_role_id` (`role_id`),

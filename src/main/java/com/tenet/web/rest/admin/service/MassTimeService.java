@@ -1,7 +1,11 @@
 package com.tenet.web.rest.admin.service;
 
+import org.springframework.data.domain.Pageable;
+
 import com.tenet.web.rest.admin.dto.MassTimeDTO;
 import com.tenet.web.rest.common.dto.response.BaseResponse;
+import com.tenet.web.rest.common.dto.response.BaseResponsePage;
+import com.tenet.web.rest.common.specification.MassTimeSerachSpec;
 
 public interface MassTimeService {
 
@@ -13,5 +17,5 @@ public interface MassTimeService {
 
 	public BaseResponse<MassTimeDTO> getMassTime(Long id);
 
-	public BaseResponse<MassTimeDTO> getAllMassTime(Integer pageNo, Integer pageSize, String sortBy, String direction);
+	public BaseResponsePage<MassTimeDTO> searchMassTime(MassTimeSerachSpec spec, Pageable pageable);
 }

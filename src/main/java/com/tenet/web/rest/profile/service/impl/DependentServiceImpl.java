@@ -16,6 +16,7 @@ import com.tenet.web.rest.common.ApplicationConstants;
 import com.tenet.web.rest.common.dto.response.BaseResponse;
 import com.tenet.web.rest.common.entity.Dependent;
 import com.tenet.web.rest.common.entity.Profile;
+import com.tenet.web.rest.common.exception.ResourceAlreadyExistsException;
 import com.tenet.web.rest.common.exception.ResourceNotFoundException;
 import com.tenet.web.rest.common.repository.DependentRepository;
 import com.tenet.web.rest.common.repository.ProfileRepository;
@@ -42,6 +43,13 @@ public class DependentServiceImpl implements DependentService {
 		LOGGER.debug("Calling DependentServiceImpl.createDependent()");
 		final Profile profile = profileRepository.findById(profileId).orElseThrow(
 				() -> new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_PROFILE_NOT_FOUND + profileId));
+
+		long duplicateCount = dependentRepository.countByFullNameAndDateOfBirth(request.getFullName(),
+				request.getDateOfBirth());
+		if (duplicateCount > 0) {
+			throw new ResourceAlreadyExistsException(
+					ApplicationConstants.ERROR_MSG_DEPENDENT_FOUND + request.getFullName());
+		}
 		Dependent dependent = modelMapper.map(request, Dependent.class);
 		dependent.setProfile(profile);
 		dependent = dependentRepository.save(dependent);

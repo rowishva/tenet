@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tenet.web.rest.common.ServiceEndpoints;
 import com.tenet.web.rest.common.dto.response.BaseResponse;
+import com.tenet.web.rest.profile.dto.ForgotPasswordResponse;
 import com.tenet.web.rest.profile.dto.ProfileDTO;
 import com.tenet.web.rest.profile.dto.ProfileUpdateDTO;
 import com.tenet.web.rest.profile.dto.SetNewPasswordDTO;
@@ -90,9 +92,9 @@ public class ProfileController {
 	@ApiOperation(value = "Set New Password", response = BaseResponse.class)
 	@PutMapping(value = ServiceEndpoints.PROFILE_SET_NEW_PASSWORD)
 	public BaseResponse<ProfileDTO> setNewPassword(@PathVariable("username") String username,
-			@RequestBody SetNewPasswordDTO request) {
+			@RequestBody SetNewPasswordDTO request, @RequestHeader(value = "reset-token") String resetToken) {
 		LOGGER.debug("Calling ProfileController.setNewPassword()");
-		return service.setNewPassword(username, request);
+		return service.setNewPassword(username, request, resetToken);
 	}
 
 	@ApiOperation(value = "OTP Verification", response = BaseResponse.class)
@@ -101,6 +103,14 @@ public class ProfileController {
 			@PathVariable("otp") String otp) {
 		LOGGER.debug("Calling ProfileController.otpVerification()");
 		return service.otpVerification(username, otp);
+	}
+
+	@ApiOperation(value = "OTP Verification for forgot password", response = BaseResponse.class)
+	@GetMapping(value = ServiceEndpoints.PROFILE_FORGOT_PASSWORD_OTP_VERIFICATION)
+	public BaseResponse<ForgotPasswordResponse> otpVerificationForForgotPassword(
+			@PathVariable("username") String username, @PathVariable("otp") String otp) {
+		LOGGER.debug("Calling ProfileController.otpVerificationForgotPassword()");
+		return service.otpVerificationForgotPassword(username, otp);
 	}
 
 }

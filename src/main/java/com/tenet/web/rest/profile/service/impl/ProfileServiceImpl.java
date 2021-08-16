@@ -1,5 +1,6 @@
 package com.tenet.web.rest.profile.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,10 +28,12 @@ import com.tenet.web.rest.common.enums.ProfileStatus;
 import com.tenet.web.rest.common.exception.BadRequestException;
 import com.tenet.web.rest.common.exception.ResourceAlreadyExistsException;
 import com.tenet.web.rest.common.exception.ResourceNotFoundException;
-import com.tenet.web.rest.common.otp.OTPUtil;
+import com.tenet.web.rest.common.exception.UnauthorizedException;
 import com.tenet.web.rest.common.repository.ProfileRepository;
 import com.tenet.web.rest.common.repository.RoleRepository;
 import com.tenet.web.rest.common.service.EmailService;
+import com.tenet.web.rest.common.util.Utils;
+import com.tenet.web.rest.profile.dto.ForgotPasswordResponse;
 import com.tenet.web.rest.profile.dto.ProfileDTO;
 import com.tenet.web.rest.profile.dto.ProfileUpdateDTO;
 import com.tenet.web.rest.profile.dto.SetNewPasswordDTO;
@@ -77,7 +80,7 @@ public class ProfileServiceImpl implements ProfileService {
 		profile.setRole(role);
 		profile.setStatus(ProfileStatus.OTPVERIFICATION);
 
-		String otp = OTPUtil.generateOTP(6);
+		String otp = Utils.generateOTP(6);
 		LOGGER.debug("Generate OTP" + otp);
 		profile.setOtp(otp);
 		Profile profileSaved = profileRepository.save(profile);
@@ -147,7 +150,7 @@ public class ProfileServiceImpl implements ProfileService {
 		if (profile == null) {
 			throw new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_USERNAME_NOT_FOUND + username);
 		}
-		String otp = OTPUtil.generateOTP(6);
+		String otp = Utils.generateOTP(6);
 		LOGGER.debug("Generate OTP" + otp);
 		profile.setOtp(otp);
 		profileRepository.save(profile);
@@ -165,7 +168,7 @@ public class ProfileServiceImpl implements ProfileService {
 		if (profile == null) {
 			throw new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_USERNAME_NOT_FOUND + username);
 		}
-		String otp = OTPUtil.generateOTP(6);
+		String otp = Utils.generateOTP(6);
 		LOGGER.debug("Generate OTP" + otp);
 		profile.setOtp(otp);
 		profileRepository.save(profile);
@@ -177,13 +180,27 @@ public class ProfileServiceImpl implements ProfileService {
 	}
 
 	@Override
-	public BaseResponse<ProfileDTO> setNewPassword(String username, SetNewPasswordDTO request) {
+	public BaseResponse<ProfileDTO> setNewPassword(String username, SetNewPasswordDTO request, String resetToken) {
 		LOGGER.debug("Calling ProfileServiceImpl.setNewPassword()");
 		Profile profile = profileRepository.findByUsername(username);
 		if (profile == null) {
 			throw new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_USERNAME_NOT_FOUND + username);
 		}
+
+		if (resetToken == null) {
+			throw new UnauthorizedException(ApplicationConstants.ERROR_MSG_TOKEN_NULL);
+		}
+		String token = profile.getResetToken();
+		LocalDateTime tokenCreationTime = profile.getResetTokenCreateTime();
+		if (resetToken != null && !resetToken.equals(token)) {
+			throw new UnauthorizedException(ApplicationConstants.ERROR_MSG_TOKEN_INVALID);
+		}
+		if (Utils.isTokenExpired(tokenCreationTime)) {
+			throw new UnauthorizedException(ApplicationConstants.ERROR_MSG_TOKEN_EXPIRED);
+		}
 		profile.setPassword(bcryptEncoder.encode(request.getPassword()));
+		profile.setResetToken(null);
+		profile.setResetTokenCreateTime(null);
 		profileRepository.save(profile);
 		BaseResponse<ProfileDTO> response = new BaseResponse<ProfileDTO>(HttpStatus.OK.value(),
 				ApplicationConstants.SUCCESS);
@@ -198,16 +215,44 @@ public class ProfileServiceImpl implements ProfileService {
 			throw new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_USERNAME_NOT_FOUND + username);
 		}
 		BaseResponse<ProfileDTO> response = null;
-		if (otp != null && otp.equals(profile.getOtp())) {
-			profile.setOtp(null);
-			if (ProfileStatus.OTPVERIFICATION.equals(profile.getStatus())) {
-				profile.setStatus(ProfileStatus.ACTIVE);
-			}
-			profileRepository.save(profile);
-			response = new BaseResponse<ProfileDTO>(HttpStatus.OK.value(), ApplicationConstants.SUCCESS);
-		} else {
-			throw new BadRequestException(ApplicationConstants.ERROR_MSG_INVALID_OTP + otp);
+		
+		if(otp == null) {
+			throw new BadRequestException(ApplicationConstants.ERROR_MSG_OTP_NULL);
 		}
+		if (otp != null && !otp.equals(profile.getOtp())) {
+			throw new BadRequestException(ApplicationConstants.ERROR_MSG_OTP_INVALID + otp);
+		}		
+		profile.setOtp(null);
+		if (ProfileStatus.OTPVERIFICATION.equals(profile.getStatus())) {
+			profile.setStatus(ProfileStatus.ACTIVE);
+		}
+		profileRepository.save(profile);
+		response = new BaseResponse<ProfileDTO>(HttpStatus.OK.value(), ApplicationConstants.SUCCESS);
+		return response;
+	}
+
+	@Override
+	public BaseResponse<ForgotPasswordResponse> otpVerificationForgotPassword(String username, String otp) {
+		LOGGER.debug("Calling ProfileServiceImpl.otpVerification()");
+		Profile profile = profileRepository.findByUsername(username);
+		if (profile == null) {
+			throw new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_USERNAME_NOT_FOUND + username);
+		}
+		BaseResponse<ForgotPasswordResponse> response = null;
+		String resetToken = null;
+		if(otp == null) {
+			throw new BadRequestException(ApplicationConstants.ERROR_MSG_OTP_NULL);
+		}
+		if (otp != null && !otp.equals(profile.getOtp())) {
+			throw new BadRequestException(ApplicationConstants.ERROR_MSG_OTP_INVALID + otp);
+		}
+		profile.setOtp(null);
+		resetToken = Utils.generateToken();
+		profile.setResetToken(resetToken);
+		profile.setResetTokenCreateTime(LocalDateTime.now());
+		profileRepository.save(profile);
+		response = new BaseResponse<ForgotPasswordResponse>(HttpStatus.OK.value(), ApplicationConstants.SUCCESS,
+				new ForgotPasswordResponse(resetToken));
 		return response;
 	}
 
