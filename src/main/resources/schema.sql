@@ -119,6 +119,7 @@ CREATE TABLE `trn_mass_core_team` (
   `updated_by_user` varchar(255) DEFAULT NULL,
   `version_number` bigint DEFAULT NULL,
   `full_name` varchar(50) DEFAULT NULL,
+  `code` varchar(10) DEFAULT NULL,
   `contact_number` varchar(16) DEFAULT NULL,
   `mass_time_id` bigint DEFAULT NULL,
   PRIMARY KEY (`id`),

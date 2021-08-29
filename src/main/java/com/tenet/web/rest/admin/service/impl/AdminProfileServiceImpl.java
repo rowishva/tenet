@@ -1,6 +1,9 @@
 package com.tenet.web.rest.admin.service.impl;
 
+import java.util.AbstractMap;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
@@ -10,15 +13,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.tenet.web.rest.admin.service.AdminProfileService;
+import com.tenet.web.rest.auth.service.AuthUserDetails;
 import com.tenet.web.rest.common.ApplicationConstants;
 import com.tenet.web.rest.common.dto.response.BaseResponse;
 import com.tenet.web.rest.common.dto.response.BaseResponsePage;
 import com.tenet.web.rest.common.entity.Profile;
 import com.tenet.web.rest.common.entity.Role;
 import com.tenet.web.rest.common.exception.ResourceNotFoundException;
+import com.tenet.web.rest.common.exception.UnauthorizedException;
 import com.tenet.web.rest.common.repository.ProfileRepository;
 import com.tenet.web.rest.common.repository.RoleRepository;
 import com.tenet.web.rest.common.specification.ProfileSerachSpec;
@@ -38,9 +44,21 @@ public class AdminProfileServiceImpl implements AdminProfileService {
 	@Autowired
 	private RoleRepository roleRepository;
 
+	private static Map<String, List<String>> ROLE_ASSIGN_ELIGIBILITY_MAP = Map.ofEntries(
+			new AbstractMap.SimpleEntry<String, List<String>>("SUADMN",
+					Arrays.asList(new String[] { "ADMN", "RTADMN", "RTUSR", "USER" })),
+			new AbstractMap.SimpleEntry<String, List<String>>("ADMN",
+					Arrays.asList(new String[] { "RTADMN", "RTUSR", "USER" })),
+			new AbstractMap.SimpleEntry<String, List<String>>("RTADMN",
+					Arrays.asList(new String[] { "RTUSR", "USER" })),
+			new AbstractMap.SimpleEntry<String, List<String>>("RTUSR", Arrays.asList(new String[] { "USER" })));
+
 	@Override
 	public BaseResponse<ProfileDTO> changeRole(Long id, String toRoleCode) {
 		LOGGER.debug("Calling AdminProfileServiceImpl.changeRole()");
+		if (!roleAssignEligibilityCheck(toRoleCode)) {
+			throw new UnauthorizedException(ApplicationConstants.ERROR_MSG_NOT_ELIGIBIL_ROLE_ASSIGNMENT);
+		}
 		Profile profile = profileRepository.findById(id).orElseThrow(
 				() -> new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_PROFILE_NOT_FOUND + id));
 
@@ -48,7 +66,6 @@ public class AdminProfileServiceImpl implements AdminProfileService {
 		if (role == null) {
 			throw new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_ROLE_NOT_FOUND + toRoleCode);
 		}
-
 		profile.setRole(role);
 		profile = profileRepository.save(profile);
 		ProfileDTO profileDTO = (ProfileDTO) modelMapper.map(profile, ProfileDTO.class);
@@ -70,5 +87,19 @@ public class AdminProfileServiceImpl implements AdminProfileService {
 			response.setTotalPages(profilePage.getTotalPages());
 		}
 		return response;
+	}
+
+	private boolean roleAssignEligibilityCheck(String toRoleCode) {
+		AuthUserDetails userDetails = (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		String logInUserRoleCode = userDetails.getRoleCode();
+		if (logInUserRoleCode.equals("USER")) {
+			throw new UnauthorizedException(ApplicationConstants.ERROR_MSG_NOT_ELIGIBIL_ROLE_ASSIGNMENT);
+		}
+		if (ROLE_ASSIGN_ELIGIBILITY_MAP.get(logInUserRoleCode).contains(toRoleCode)) {
+			return true;
+		}
+		return false;
+
 	}
 }

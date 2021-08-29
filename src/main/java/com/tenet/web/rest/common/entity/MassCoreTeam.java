@@ -31,6 +31,9 @@ public class MassCoreTeam extends BaseDomain {
 
 	@Column(name = "contact_number", length = 16)
 	private String contactNumber;
+	
+	@Column(name = "code", length = 10)
+	private String code;
 
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "mass_time_id", referencedColumnName = "id")
@@ -68,4 +71,11 @@ public class MassCoreTeam extends BaseDomain {
 		this.massTime = massTime;
 	}
 
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
 }

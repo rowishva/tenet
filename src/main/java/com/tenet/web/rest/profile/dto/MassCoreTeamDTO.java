@@ -8,6 +8,7 @@ public class MassCoreTeamDTO implements Serializable {
 
 	private long id;
 	private String fullName;
+	private String code;
 	private String contactNumber;
 
 	public long getId() {
@@ -33,5 +34,13 @@ public class MassCoreTeamDTO implements Serializable {
 	public void setContactNumber(String contactNumber) {
 		this.contactNumber = contactNumber;
 	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}	
 
 }

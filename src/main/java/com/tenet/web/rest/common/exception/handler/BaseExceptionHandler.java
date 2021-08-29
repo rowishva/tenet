@@ -4,6 +4,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
@@ -57,6 +58,13 @@ public class BaseExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<BaseExceptionResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
+	@ExceptionHandler(InternalAuthenticationServiceException.class)
+	public ResponseEntity<BaseExceptionResponse> handleInternalAuthenticationServiceException(
+			InternalAuthenticationServiceException exception, WebRequest request) {
+		return new ResponseEntity<BaseExceptionResponse>(buildResponse(HttpStatus.UNAUTHORIZED, exception, request),
+				HttpStatus.UNAUTHORIZED);
+	}
+
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -65,10 +73,10 @@ public class BaseExceptionHandler extends ResponseEntityExceptionHandler {
 		response.setErrorMessage(error.getDefaultMessage());
 		return new ResponseEntity<Object>(response, HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@ExceptionHandler(MissingRequestHeaderException.class)
-	public final ResponseEntity<BaseExceptionResponse> handleMissingRequestHeaderException(MissingRequestHeaderException exception,
-			WebRequest request) {
+	public final ResponseEntity<BaseExceptionResponse> handleMissingRequestHeaderException(
+			MissingRequestHeaderException exception, WebRequest request) {
 		BaseExceptionResponse response = buildResponse(HttpStatus.BAD_REQUEST, exception, request);
 		response.setErrorMessage(ApplicationConstants.ERROR_MSG_MISSING_MANDATORY_PARAMETERS);
 		return new ResponseEntity<BaseExceptionResponse>(response, HttpStatus.BAD_REQUEST);
@@ -81,7 +89,7 @@ public class BaseExceptionHandler extends ResponseEntityExceptionHandler {
 		response.setErrorMessage(ApplicationConstants.ERROR_MSG_MALFORMED_JSON_REQUEST);
 		return new ResponseEntity<Object>(response, HttpStatus.BAD_REQUEST);
 	}
-	
+
 	private BaseExceptionResponse buildResponse(HttpStatus status, Exception exception, WebRequest webRequest) {
 		BaseExceptionResponse response = new BaseExceptionResponse();
 		response.setStatus(status.value());
