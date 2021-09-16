@@ -40,10 +40,9 @@ public class AuthUserDetailsService implements UserDetailsService {
 		}
 		Role role = profile.getRole();
 		boolean isEnabled = false;
-		if(profile.getStatus().getCode() == ProfileStatus.ACTIVE.getCode()) {
+		if (profile.getStatus().getCode() == ProfileStatus.ACTIVE.getCode()) {
 			isEnabled = true;
-		}
-		else {
+		} else {
 			LOGGER.error("Profile is not Active, Status: " + profile.getStatus().getName());
 			throw new UnauthorizedException("Profile is not Active, Status: " + profile.getStatus().getName());
 		}

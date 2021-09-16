@@ -2,10 +2,13 @@ package com.tenet.web.rest.admin.dto;
 
 import java.io.Serializable;
 
-public class CommunityAllocationDTO implements Serializable {
+public class AllocationRes implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	private String id;
+	private String code;
+	private String description;
 	private int totalAllocation;
 	private int availableAllocation;
 
@@ -23,6 +26,30 @@ public class CommunityAllocationDTO implements Serializable {
 
 	public void setAvailableAllocation(int availableAllocation) {
 		this.availableAllocation = availableAllocation;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 }

@@ -38,5 +38,7 @@ public interface ApplicationConstants {
 	public static final String ERROR_MSG_TOKEN_EXPIRED = "You are not authorized: Token is Expired";
 	public static final String ERROR_MSG_MISSING_MANDATORY_PARAMETERS = "Bad request missing mandatory parameters";
 	public static final String ERROR_MSG_NOT_ELIGIBIL_ROLE_ASSIGNMENT = "You are not authorized to do this role assignment";
+	public static final String ERROR_MSG_SEATINGCATEGORY_NOT_FOUND = "Seating Category Not Found, Invalid Id :";
+	public static final String ERROR_MSG_SEATINGPREFIX_NOT_FOUND = "Seating Prefix Not Found, Invalid Id :";
 
 }

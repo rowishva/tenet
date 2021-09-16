@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.tenet.web.rest.admin.dto.CommunityAllocationDTO;
-import com.tenet.web.rest.admin.dto.CommunityAllocationRes;
+import com.tenet.web.rest.admin.dto.AllocationDTO;
+import com.tenet.web.rest.admin.dto.AllocationRes;
 import com.tenet.web.rest.admin.service.CommunityAllocationService;
 import com.tenet.web.rest.common.ApplicationConstants;
 import com.tenet.web.rest.common.dto.response.BaseResponse;
@@ -31,30 +31,30 @@ public class CommunityAllocationServiceImpl implements CommunityAllocationServic
 	private CommunityAllocationRepository communityAllocationRepository;
 
 	@Override
-	public BaseResponse<CommunityAllocationRes> updateCommunityAllocation(Long id, CommunityAllocationDTO request) {
+	public BaseResponse<AllocationRes> updateCommunityAllocation(Long id, AllocationDTO request) {
 		LOGGER.debug("Calling CommunityAllocationServiceImpl.updateCommunityAllocation()");
 		CommunityAllocation communityAllocation = communityAllocationRepository.findById(id).orElseThrow(
 				() -> new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_COMMUNITYALLOCATION_NOT_FOUND + id));
 
 		modelMapper.map(request, communityAllocation);
 		communityAllocation = communityAllocationRepository.save(communityAllocation);
-		CommunityAllocationRes communityAllocationRes = modelMapper.map(communityAllocation,
-				CommunityAllocationRes.class);
-		BaseResponse<CommunityAllocationRes> response = new BaseResponse<CommunityAllocationRes>(HttpStatus.OK.value(),
+		AllocationRes communityAllocationRes = modelMapper.map(communityAllocation, AllocationRes.class);
+		BaseResponse<AllocationRes> response = new BaseResponse<AllocationRes>(HttpStatus.OK.value(),
 				ApplicationConstants.SUCCESS, communityAllocationRes);
 		return response;
 	}
 
 	@Override
-	public BaseResponse<CommunityAllocationRes> getAllCommunityAllocation() {
+	public BaseResponse<AllocationRes> getAllCommunityAllocation() {
 		LOGGER.debug("Calling CommunityAllocationServiceImpl.getAllCommunityAllocation()");
 		List<CommunityAllocation> communityAllocationList = communityAllocationRepository.findAll();
-
-		List<CommunityAllocationRes> communityAllocationResList = communityAllocationList.stream()
-				.map(communityAllocation -> modelMapper.map(communityAllocation, CommunityAllocationRes.class))
+		int totalCapacity = communityAllocationRepository.getTotalCapacity();
+		
+		List<AllocationRes> allocationResList = communityAllocationList.stream()
+				.map(communityAllocation -> modelMapper.map(communityAllocation, AllocationRes.class))
 				.collect(Collectors.toList());
-		BaseResponse<CommunityAllocationRes> response = new BaseResponse<CommunityAllocationRes>(HttpStatus.OK.value(),
-				ApplicationConstants.SUCCESS, communityAllocationResList);
+		BaseResponse<AllocationRes> response = new BaseResponse<AllocationRes>(HttpStatus.OK.value(),
+				ApplicationConstants.SUCCESS, allocationResList, totalCapacity);
 		return response;
 	}
 

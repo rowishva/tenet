@@ -16,6 +16,8 @@ public final class ServiceEndpoints {
 	public static final String ADMIN_MASS_TIME = "admin/masstime";
 	public static final String ADMIN_MASS_CORE_TEAM = "admin/masscoreteam/{massTimeId}";
 	public static final String ADMIN_COMMUNITY_ALLOCATION = "admin/communityallocation";
+	public static final String ADMIN_SEATING_CATEGORY = "admin/seatingcategory";
+	public static final String ADMIN_SEATING_PREFIX = "admin/seatingprefix";
 	public static final String ADMIN_PROFILE = "admin/profile";
 	public static final String CHANGEROLE = "/changerole/{profileid}/{torolecode}";
 	public static final String ADMIN_GLOBAL_PARAMETER = "admin/globalparameter";

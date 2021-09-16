@@ -7,6 +7,8 @@ DROP TABLE IF EXISTS `trn_mass_core_team`;
 DROP TABLE IF EXISTS `trn_mass_time`;
 DROP TABLE IF EXISTS `mst_community_allocation`;
 DROP TABLE IF EXISTS `mst_global_parameter`;
+DROP TABLE IF EXISTS `mst_seating_category`;
+DROP TABLE IF EXISTS `mst_seating_prefix`;
 
 --Drop sequence --
 DROP TABLE IF EXISTS `dependent_sequence`;
@@ -153,6 +155,37 @@ CREATE TABLE `mst_global_parameter` (
   `description` varchar(50) NOT NULL,
   `code` varchar(10) NOT NULL,
   `parameter_value` varchar(10) NOT NULL, 
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `mst_seating_category` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `create_time` datetime(6) NOT NULL,
+  `created_by_user` varchar(255) NOT NULL,
+  `is_deleted` bit(1) DEFAULT NULL,
+  `update_time` datetime(6) DEFAULT NULL,
+  `updated_by_user` varchar(255) DEFAULT NULL,
+  `version_number` bigint DEFAULT NULL,
+  `description` varchar(50) NOT NULL,
+  `code` varchar(10) NOT NULL,
+  `total_allocation` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `mst_seating_prefix` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `create_time` datetime(6) NOT NULL,
+  `created_by_user` varchar(255) NOT NULL,
+  `is_deleted` bit(1) DEFAULT NULL,
+  `update_time` datetime(6) DEFAULT NULL,
+  `updated_by_user` varchar(255) DEFAULT NULL,
+  `version_number` bigint DEFAULT NULL,
+  `prefix` varchar(10) NOT NULL,
+  `tag` varchar(10) NOT NULL,
+  `start_no` int DEFAULT NULL,
+  `end_no` int DEFAULT NULL,  
+  `allocation_capacity` int DEFAULT NULL,
+  `carpark_allocation` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 

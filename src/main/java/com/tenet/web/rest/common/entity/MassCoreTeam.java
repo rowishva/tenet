@@ -31,7 +31,7 @@ public class MassCoreTeam extends BaseDomain {
 
 	@Column(name = "contact_number", length = 16)
 	private String contactNumber;
-	
+
 	@Column(name = "code", length = 10)
 	private String code;
 

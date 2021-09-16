@@ -12,35 +12,35 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tenet.web.rest.admin.dto.AllocationDTO;
 import com.tenet.web.rest.admin.dto.AllocationRes;
-import com.tenet.web.rest.admin.service.CommunityAllocationService;
+import com.tenet.web.rest.admin.service.SeatingCategoryService;
 import com.tenet.web.rest.common.ServiceEndpoints;
 import com.tenet.web.rest.common.dto.response.BaseResponse;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-@Api(value = "Admin:Community Allocation")
+@Api(value = "Admin:Seating Category")
 @RestController
-@RequestMapping(ServiceEndpoints.ADMIN_COMMUNITY_ALLOCATION)
-public class CommunityAllocationController {
+@RequestMapping(ServiceEndpoints.ADMIN_SEATING_CATEGORY)
+public class SeatingCategoryController {
 
 	private Logger LOGGER = LogManager.getLogger(this.getClass());
 
 	@Autowired
-	private CommunityAllocationService service;
+	private SeatingCategoryService service;
 
-	@ApiOperation(value = "Update Community Allocation", response = BaseResponse.class)
+	@ApiOperation(value = "Update Seating Category", response = BaseResponse.class)
 	@PutMapping(value = ServiceEndpoints.ID)
-	public BaseResponse<AllocationRes> updateCommunityAllocation(@PathVariable("id") Long id,
+	public BaseResponse<AllocationRes> updateSeatingCategory(@PathVariable("id") Long id,
 			@RequestBody AllocationDTO request) {
-		LOGGER.debug("Calling MassCoreTeamController.updateCommunityAllocation()");
-		return service.updateCommunityAllocation(id, request);
+		LOGGER.debug("Calling SeatingCategoryController.updateSeatingCategory()");
+		return service.updateSeatingCategory(id, request);
 	}
 
-	@ApiOperation(value = "Get All Community Allocation", response = BaseResponse.class)
+	@ApiOperation(value = "Get All Seating Category", response = BaseResponse.class)
 	@GetMapping
-	public BaseResponse<AllocationRes> getAllCommunityAllocation() {
-		LOGGER.debug("Calling MassCoreTeamController.getAllCommunityAllocation()");
-		return service.getAllCommunityAllocation();
+	public BaseResponse<AllocationRes> getAllSeatingCategory() {
+		LOGGER.debug("Calling SeatingCategoryController.getAllSeatingCategory()");
+		return service.getAllSeatingCategory();
 	}
 }

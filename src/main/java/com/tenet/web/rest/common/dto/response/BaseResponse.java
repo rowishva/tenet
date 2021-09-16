@@ -15,7 +15,8 @@ public class BaseResponse<T> implements Serializable {
 	private T response;
 
 	private List<T> responseList;
-
+	private Integer totalCapacity;
+	
 	public BaseResponse(int status, String message, T response) {
 		this.status = status;
 		this.message = message;
@@ -26,6 +27,13 @@ public class BaseResponse<T> implements Serializable {
 		this.status = status;
 		this.message = message;
 		this.responseList = responseList;
+	}
+	
+	public BaseResponse(int status, String message, List<T> responseList, int totalCapacity) {
+		this.status = status;
+		this.message = message;
+		this.responseList = responseList;
+		this.totalCapacity = totalCapacity;
 	}
 
 	public BaseResponse(int status, String message) {
@@ -67,5 +75,14 @@ public class BaseResponse<T> implements Serializable {
 	public void setResponseList(List<T> responseList) {
 		this.responseList = responseList;
 	}
+
+	public Integer getTotalCapacity() {
+		return totalCapacity;
+	}
+
+	public void setTotalCapacity(int totalCapacity) {
+		this.totalCapacity = totalCapacity;
+	}
+	
 
 }

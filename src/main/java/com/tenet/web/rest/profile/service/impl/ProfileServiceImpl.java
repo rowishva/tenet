@@ -215,13 +215,13 @@ public class ProfileServiceImpl implements ProfileService {
 			throw new ResourceNotFoundException(ApplicationConstants.ERROR_MSG_USERNAME_NOT_FOUND + username);
 		}
 		BaseResponse<ProfileDTO> response = null;
-		
-		if(otp == null) {
+
+		if (otp == null) {
 			throw new BadRequestException(ApplicationConstants.ERROR_MSG_OTP_NULL);
 		}
 		if (otp != null && !otp.equals(profile.getOtp())) {
 			throw new BadRequestException(ApplicationConstants.ERROR_MSG_OTP_INVALID + otp);
-		}		
+		}
 		profile.setOtp(null);
 		if (ProfileStatus.OTPVERIFICATION.equals(profile.getStatus())) {
 			profile.setStatus(ProfileStatus.ACTIVE);
@@ -240,7 +240,7 @@ public class ProfileServiceImpl implements ProfileService {
 		}
 		BaseResponse<ForgotPasswordResponse> response = null;
 		String resetToken = null;
-		if(otp == null) {
+		if (otp == null) {
 			throw new BadRequestException(ApplicationConstants.ERROR_MSG_OTP_NULL);
 		}
 		if (otp != null && !otp.equals(profile.getOtp())) {
