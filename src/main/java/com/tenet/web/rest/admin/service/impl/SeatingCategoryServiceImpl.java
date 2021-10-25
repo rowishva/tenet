@@ -49,7 +49,7 @@ public class SeatingCategoryServiceImpl implements SeatingCategoryService {
 		LOGGER.debug("Calling SeatingCategoryServiceImpl.getAllSeatingCategory()");
 		List<SeatingCategory> seatingCategoryList = seatingCategoryRepository.findAll();
 		int totalCapacity = seatingCategoryRepository.getTotalCapacity();
-		
+
 		List<AllocationRes> allocationResList = seatingCategoryList.stream()
 				.map(seatingCategory -> modelMapper.map(seatingCategory, AllocationRes.class))
 				.collect(Collectors.toList());

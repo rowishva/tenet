@@ -24,7 +24,7 @@ import com.tenet.web.rest.common.enums.SpecialNeeds;
 @Entity
 @Table(name = "trn_dependent")
 @Where(clause = "is_deleted=0")
-@SequenceGenerator(name = "dependent_sequence_generator", sequenceName = "dependent_sequence", initialValue = 10000, allocationSize = 1)
+@SequenceGenerator(name = "dependent_sequence_generator", sequenceName = "trn_dependent_sequence", initialValue = 10000, allocationSize = 1)
 public class Dependent extends BaseDomain {
 
 	private static final long serialVersionUID = 1L;

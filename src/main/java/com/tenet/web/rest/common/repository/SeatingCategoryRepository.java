@@ -9,8 +9,8 @@ import com.tenet.web.rest.common.entity.SeatingCategory;
 @Repository
 public interface SeatingCategoryRepository extends JpaRepository<SeatingCategory, Long> {
 
-	SeatingCategory findByCode(String code);
-	
-	@Query("SELECT SUM(sc.totalAllocation) FROM SeatingCategory sc")
+	SeatingCategory findByTag(String tag);
+
+	@Query("SELECT SUM(sc.totalCapacity) FROM SeatingCategory sc")
 	int getTotalCapacity();
 }

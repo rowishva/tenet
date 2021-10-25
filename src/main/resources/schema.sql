@@ -3,7 +3,8 @@ CREATE DATABASE  IF NOT EXISTS `tenetdb`;
 DROP TABLE IF EXISTS `trn_dependent`;
 DROP TABLE IF EXISTS `trn_profile`;
 DROP TABLE IF EXISTS `mst_role`;
-DROP TABLE IF EXISTS `trn_mass_core_team`;
+DROP TABLE IF EXISTS `trn_mass_booking`;
+DROP TABLE IF EXISTS `trn_mass_booking_category`;
 DROP TABLE IF EXISTS `trn_mass_time`;
 DROP TABLE IF EXISTS `mst_community_allocation`;
 DROP TABLE IF EXISTS `mst_global_parameter`;
@@ -11,25 +12,34 @@ DROP TABLE IF EXISTS `mst_seating_category`;
 DROP TABLE IF EXISTS `mst_seating_prefix`;
 
 --Drop sequence --
-DROP TABLE IF EXISTS `dependent_sequence`;
-DROP TABLE IF EXISTS `profile_sequence`;
-DROP TABLE IF EXISTS `mass_time_sequence`;
-DROP TABLE IF EXISTS `mass_core_team_sequence`;
+DROP TABLE IF EXISTS `trn_dependent_sequence`;
+DROP TABLE IF EXISTS `trn_profile_sequence`;
+DROP TABLE IF EXISTS `trn_mass_time_sequence`;
+DROP TABLE IF EXISTS `trn_mass_booking_sequence`;
+DROP TABLE IF EXISTS `trn_mass_booking_category_sequence`;
+DROP TABLE IF EXISTS `trn_mass_booking_no`;
+
+--Drop Function --
+DROP FUNCTION IF EXISTS `fnt_mass_booking`;
 
 --Create sequence --
-CREATE TABLE `dependent_sequence` (
+CREATE TABLE `trn_dependent_sequence` (
   `next_val` bigint DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `profile_sequence` (
+CREATE TABLE `trn_profile_sequence` (
   `next_val` bigint DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `mass_time_sequence` (
+CREATE TABLE `trn_mass_time_sequence` (
   `next_val` bigint DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `mass_core_team_sequence` (
+CREATE TABLE `trn_mass_booking_sequence` (
+  `next_val` bigint DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `trn_mass_booking_no` (
   `next_val` bigint DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -112,23 +122,6 @@ CREATE TABLE `trn_mass_time` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `trn_mass_core_team` (
-  `id` bigint NOT NULL,
-  `create_time` datetime(6) NOT NULL,
-  `created_by_user` varchar(255) NOT NULL,
-  `is_deleted` bit(1) DEFAULT NULL,
-  `update_time` datetime(6) DEFAULT NULL,
-  `updated_by_user` varchar(255) DEFAULT NULL,
-  `version_number` bigint DEFAULT NULL,
-  `full_name` varchar(50) DEFAULT NULL,
-  `code` varchar(10) DEFAULT NULL,
-  `contact_number` varchar(16) DEFAULT NULL,
-  `mass_time_id` bigint DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FK_trn_mass_time_mass_time_id` (`mass_time_id`),
-  CONSTRAINT `FK_trn_mass_time_mass_time_id` FOREIGN KEY (`mass_time_id`) REFERENCES `trn_mass_time` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
 CREATE TABLE `mst_community_allocation` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `create_time` datetime(6) NOT NULL,
@@ -167,8 +160,8 @@ CREATE TABLE `mst_seating_category` (
   `updated_by_user` varchar(255) DEFAULT NULL,
   `version_number` bigint DEFAULT NULL,
   `description` varchar(50) NOT NULL,
-  `code` varchar(10) NOT NULL,
-  `total_allocation` int DEFAULT NULL,
+  `tag` varchar(10) NOT NULL,
+  `total_capacity` int DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -189,4 +182,87 @@ CREATE TABLE `mst_seating_prefix` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+CREATE TABLE `trn_mass_booking` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `create_time` datetime(6) NOT NULL,
+  `created_by_user` varchar(255) NOT NULL,
+  `is_deleted` bit(1) DEFAULT NULL,
+  `update_time` datetime(6) DEFAULT NULL,
+  `updated_by_user` varchar(255) DEFAULT NULL,
+  `version_number` bigint DEFAULT NULL,
+  `prefix` varchar(10) NOT NULL,
+  `tag` varchar(10) NOT NULL,
+  `seating_no` int DEFAULT NULL,
+  `carpark_allocation` varchar(50) DEFAULT NULL,  
+  `mass_booking_no` varchar(50) DEFAULT NULL,  
+  `attendance` bit(1) DEFAULT NULL,  
+  `booked` bit(1) DEFAULT NULL,  
+  `full_name` varchar(50) DEFAULT NULL,
+  `contact_number` varchar(16) DEFAULT NULL,
+  `profile_id` bigint DEFAULT NULL,
+  `dependent_id` bigint DEFAULT NULL,
+  `mass_time_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`)  
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+CREATE TABLE `trn_mass_booking_category` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `create_time` datetime(6) NOT NULL,
+  `created_by_user` varchar(255) NOT NULL,
+  `is_deleted` bit(1) DEFAULT NULL,
+  `update_time` datetime(6) DEFAULT NULL,
+  `updated_by_user` varchar(255) DEFAULT NULL,
+  `version_number` bigint DEFAULT NULL,
+  `tag` varchar(10) NOT NULL,
+  `total_capacity` int DEFAULT NULL,
+  `available_capacity` int DEFAULT NULL,
+  `mass_time_id` bigint DEFAULT NULL,
+  `next_allocation_sequence` varchar(5) DEFAULT NULL,  
+  PRIMARY KEY (`id`),
+  KEY `FK_trn_mass_booking_category_mass_time_id` (`mass_time_id`),
+  CONSTRAINT `FK_trn_mass_booking_category_mass_time_id` FOREIGN KEY (`mass_time_id`) REFERENCES `trn_mass_time` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+/**
+DELIMITER $$
+CREATE `fnt_mass_booking`(Mass_ID bigint) RETURNS varchar(20) CHARSET utf8mb4
+    DETERMINISTIC
+BEGIN
+    DECLARE return_value VARCHAR(20);
+DECLARE prefixC VARCHAR(300);
+DECLARE tagC VARCHAR(255);
+DECLARE startNo INT;
+DECLARE EndNo INT;
+DECLARE allocationC INT;
+DECLARE carparkAllC VARCHAR(255);
+DECLARE countMain INT;
+DECLARE Mass_IDd INT;
+DECLARE SecondCount INT;
+Declare FinalCount int;
+Declare FinalCountIncrement int;
+   SET Mass_IDd = 142;
+   set FinalCountIncrement = 1;
+set FinalCount = (select Count(*) from mst_seating_prefix);
+
+while FinalCountIncrement <= FinalCount DO
+
+		SELECT  prefix,tag,start_no,end_no,allocation_capacity,carpark_allocation  INTO 
+		prefixC,tagC,startNo,EndNo,allocationC,carparkALLC FROM mst_seating_prefix WHERE ID = FinalCountIncrement;
+		SET SecondCount = StartNo;
+		set countMain = 1;
+
+		WHILE allocationC >= countMain  DO				
+				INSERT INTO `trn_mass_booking` (mass_time_id, prefix, tag, seating_no, carpark_allocation, create_time, created_by_user, is_deleted, version_number)
+				VALUES (Mass_ID,prefixC,tagC,SecondCount,carparkALLC, curdate(), 'fnt_mass_booking', '\0', 0);
+				set SecondCount = SecondCount + 1;
+				set countMain = countMain + 1;
+				
+			END WHILE; 
+		SET FinalCountIncrement = FinalCountIncrement + 1;
+	END WHILE;
+set return_value = 'DONE';
+	-- return return_value
+	RETURN (return_value);
+END$$
+DELIMITER ;
+**/

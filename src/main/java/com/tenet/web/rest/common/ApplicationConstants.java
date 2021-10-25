@@ -17,6 +17,7 @@ public interface ApplicationConstants {
 	public static final String AUTHORIZATION = "Authorization";
 	public static final String BEARER = "Bearer ";
 	public static final long TOKEN_VALIDITY = 1 * 60 * 60;
+	public static final String CORE_TEAM = "CORETEAM";
 
 	public static final String ERROR_MSG_PROFILE_NOT_FOUND = "Profile Not Found, Invalid Id :";
 	public static final String ERROR_MSG_DEPENDENT_NOT_FOUND = "Dependent Not Found, Invalid Id :";
@@ -40,5 +41,9 @@ public interface ApplicationConstants {
 	public static final String ERROR_MSG_NOT_ELIGIBIL_ROLE_ASSIGNMENT = "You are not authorized to do this role assignment";
 	public static final String ERROR_MSG_SEATINGCATEGORY_NOT_FOUND = "Seating Category Not Found, Invalid Id :";
 	public static final String ERROR_MSG_SEATINGPREFIX_NOT_FOUND = "Seating Prefix Not Found, Invalid Id :";
+	public static final String ERROR_MSG_FULLY_BOOKED_MASS_TIME_TAG = "Fully Booked Mass Time & Tag :";
+	public static final String ERROR_MSG_ERROR_IN_FUNCTION = "Error in Function : fnt_mass_booking";
+	public static final String ERROR_MSG_NOT_ENOUGH_CAPACITY = "Not enough capacity, Available Capacity only : ";
+	public static final String ERROR_MSG_MASSBOOKING_NOT_FOUND = "Mass Booking Not Found, Invalid Id :";
 
 }

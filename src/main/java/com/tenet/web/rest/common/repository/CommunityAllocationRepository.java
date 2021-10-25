@@ -10,7 +10,7 @@ import com.tenet.web.rest.common.entity.CommunityAllocation;
 public interface CommunityAllocationRepository extends JpaRepository<CommunityAllocation, Long> {
 
 	CommunityAllocation findByCode(String code);
-	
+
 	@Query("SELECT SUM(ca.totalAllocation) FROM CommunityAllocation ca")
 	int getTotalCapacity();
 }

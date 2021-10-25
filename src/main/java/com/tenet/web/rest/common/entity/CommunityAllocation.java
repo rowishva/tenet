@@ -7,15 +7,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.Where;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.vladmihalcea.hibernate.type.json.JsonType;
 
 @Entity
 @Table(name = "mst_community_allocation")
-@TypeDef(typeClass = JsonType.class, defaultForType = JsonNode.class)
 @Where(clause = "is_deleted=0")
 public class CommunityAllocation extends BaseDomain {
 
@@ -34,9 +29,6 @@ public class CommunityAllocation extends BaseDomain {
 
 	@Column(name = "total_allocation")
 	private int totalAllocation;
-
-	@Column(name = "available_allocation")
-	private int availableAllocation;
 
 	public Long getId() {
 		return id;
@@ -70,11 +62,4 @@ public class CommunityAllocation extends BaseDomain {
 		this.totalAllocation = totalAllocation;
 	}
 
-	public int getAvailableAllocation() {
-		return availableAllocation;
-	}
-
-	public void setAvailableAllocation(int availableAllocation) {
-		this.availableAllocation = availableAllocation;
-	}
 }

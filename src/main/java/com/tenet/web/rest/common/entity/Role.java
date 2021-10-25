@@ -10,16 +10,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.Where;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.tenet.web.rest.common.config.StringListConverter;
-import com.vladmihalcea.hibernate.type.json.JsonType;
 
 @Entity
 @Table(name = "mst_role")
-@TypeDef(typeClass = JsonType.class, defaultForType = JsonNode.class)
 @Where(clause = "is_deleted=0")
 public class Role extends BaseDomain {
 

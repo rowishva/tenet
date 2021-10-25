@@ -49,7 +49,7 @@ public class CommunityAllocationServiceImpl implements CommunityAllocationServic
 		LOGGER.debug("Calling CommunityAllocationServiceImpl.getAllCommunityAllocation()");
 		List<CommunityAllocation> communityAllocationList = communityAllocationRepository.findAll();
 		int totalCapacity = communityAllocationRepository.getTotalCapacity();
-		
+
 		List<AllocationRes> allocationResList = communityAllocationList.stream()
 				.map(communityAllocation -> modelMapper.map(communityAllocation, AllocationRes.class))
 				.collect(Collectors.toList());

@@ -7,15 +7,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.Where;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.vladmihalcea.hibernate.type.json.JsonType;
 
 @Entity
 @Table(name = "mst_seating_category")
-@TypeDef(typeClass = JsonType.class, defaultForType = JsonNode.class)
 @Where(clause = "is_deleted=0")
 public class SeatingCategory extends BaseDomain {
 
@@ -26,14 +21,14 @@ public class SeatingCategory extends BaseDomain {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(name = "code", length = 10, nullable = false)
-	private String code;
+	@Column(name = "tag", length = 10, nullable = false)
+	private String tag;
 
 	@Column(name = "description", length = 50, nullable = false)
 	private String description;
 
-	@Column(name = "total_allocation")
-	private int totalAllocation;
+	@Column(name = "total_capacity")
+	private int totalCapacity;
 
 	public Long getId() {
 		return id;
@@ -51,19 +46,20 @@ public class SeatingCategory extends BaseDomain {
 		this.description = description;
 	}
 
-	public String getCode() {
-		return code;
+	public int getTotalCapacity() {
+		return totalCapacity;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	public void setTotalCapacity(int totalCapacity) {
+		this.totalCapacity = totalCapacity;
 	}
 
-	public int getTotalAllocation() {
-		return totalAllocation;
+	public String getTag() {
+		return tag;
 	}
 
-	public void setTotalAllocation(int totalAllocation) {
-		this.totalAllocation = totalAllocation;
+	public void setTag(String tag) {
+		this.tag = tag;
 	}
+
 }

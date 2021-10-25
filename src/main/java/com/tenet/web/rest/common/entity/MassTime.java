@@ -21,7 +21,7 @@ import com.tenet.web.rest.common.enums.MassStatus;
 @Entity
 @Table(name = "trn_mass_time")
 @Where(clause = "is_deleted=0")
-@SequenceGenerator(name = "mass_time_sequence_generator", sequenceName = "mass_time_sequence", initialValue = 1000, allocationSize = 1)
+@SequenceGenerator(name = "mass_time_sequence_generator", sequenceName = "trn_mass_time_sequence", initialValue = 1000, allocationSize = 1)
 public class MassTime extends BaseDomain {
 
 	private static final long serialVersionUID = 1L;
@@ -45,9 +45,6 @@ public class MassTime extends BaseDomain {
 
 	@Column(name = "total_capacity")
 	private int totalCapacity;
-
-	@Column(name = "available_capacity")
-	private int availableCapacity;
 
 	public Long getId() {
 		return id;
@@ -89,11 +86,4 @@ public class MassTime extends BaseDomain {
 		this.totalCapacity = totalCapacity;
 	}
 
-	public int getAvailableCapacity() {
-		return availableCapacity;
-	}
-
-	public void setAvailableCapacity(int availableCapacity) {
-		this.availableCapacity = availableCapacity;
-	}
 }

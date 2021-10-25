@@ -3,6 +3,7 @@ package com.tenet.web.rest.admin.controller;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tenet.web.rest.admin.service.MassCoreTeamService;
 import com.tenet.web.rest.common.ServiceEndpoints;
 import com.tenet.web.rest.common.dto.response.BaseResponse;
+import com.tenet.web.rest.common.dto.response.BaseResponsePage;
+import com.tenet.web.rest.common.specification.CoreTeamSerachSpec;
 import com.tenet.web.rest.profile.dto.MassCoreTeamDTO;
 
 import io.swagger.annotations.Api;
@@ -31,7 +34,7 @@ public class MassCoreTeamController {
 	private MassCoreTeamService service;
 
 	@ApiOperation(value = "Create new Mass Core Team", response = BaseResponse.class)
-	@PostMapping
+	@PostMapping(value = ServiceEndpoints.MASSTIME_ID)
 	public BaseResponse<MassCoreTeamDTO> createMassCoreTeam(@PathVariable("massTimeId") Long massTimeId,
 			@RequestBody MassCoreTeamDTO request) {
 		LOGGER.debug("Calling MassCoreTeamController.createMassCoreTeam()");
@@ -63,9 +66,16 @@ public class MassCoreTeamController {
 	}
 
 	@ApiOperation(value = "Get All Mass Core Team", response = BaseResponse.class)
-	@GetMapping
+	@GetMapping(value = ServiceEndpoints.MASSTIME_ID)
 	public BaseResponse<MassCoreTeamDTO> getAllMassCoreTeam(@PathVariable("massTimeId") Long massTimeId) {
 		LOGGER.debug("Calling MassCoreTeamController.getAllMassCoreTeam()");
 		return service.getAllMassCoreTeam(massTimeId);
+	}
+
+	@ApiOperation(value = "Search Mass Core Team", response = BaseResponse.class)
+	@GetMapping(value = ServiceEndpoints.SEARCH)
+	public BaseResponsePage<MassCoreTeamDTO> searchMassCoreTeam(CoreTeamSerachSpec spec, Pageable pageable) {
+		LOGGER.debug("Calling MassCoreTeamController.searchProfile()");
+		return service.searchMassCoreTeam(spec, pageable);
 	}
 }

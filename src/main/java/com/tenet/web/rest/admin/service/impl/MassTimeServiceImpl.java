@@ -3,6 +3,8 @@ package com.tenet.web.rest.admin.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
@@ -13,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.tenet.web.rest.admin.dto.MassTimeDTO;
+import com.tenet.web.rest.admin.service.AutoPopulateService;
 import com.tenet.web.rest.admin.service.MassTimeService;
 import com.tenet.web.rest.common.ApplicationConstants;
 import com.tenet.web.rest.common.dto.response.BaseResponse;
@@ -34,7 +37,11 @@ public class MassTimeServiceImpl implements MassTimeService {
 	@Autowired
 	private MassTimeRepository massTimeRepository;
 
+	@Autowired
+	private AutoPopulateService autoPopulateService;
+
 	@Override
+	@Transactional
 	public BaseResponse<MassTimeDTO> createMassTime(MassTimeDTO request) {
 
 		LOGGER.debug("Calling MassTimeServiceImpl.createMassTime()");
@@ -44,8 +51,9 @@ public class MassTimeServiceImpl implements MassTimeService {
 					ApplicationConstants.ERROR_MSG_MASSTIME_FOUND + request.getDate() + request.getTime());
 		}
 		MassTime massTime = modelMapper.map(request, MassTime.class);
-		massTime.setAvailableCapacity(request.getTotalCapacity());
 		massTime = massTimeRepository.save(massTime);
+		LOGGER.debug("Calling MassTimeServiceImpl.createMassTime().autoPopulateService");
+		autoPopulateService.initMassBooking(massTime);
 		MassTimeDTO massTimeDTO = modelMapper.map(massTime, MassTimeDTO.class);
 		BaseResponse<MassTimeDTO> response = new BaseResponse<MassTimeDTO>(HttpStatus.CREATED.value(),
 				ApplicationConstants.SUCCESS, massTimeDTO);

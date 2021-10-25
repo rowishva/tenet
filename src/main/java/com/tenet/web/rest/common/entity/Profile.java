@@ -30,7 +30,7 @@ import com.tenet.web.rest.common.enums.SpecialNeeds;
 @Entity
 @Table(name = "trn_profile", uniqueConstraints = @UniqueConstraint(columnNames = { "username" }))
 @Where(clause = "is_deleted=0")
-@SequenceGenerator(name = "profile_sequence_generator", sequenceName = "profile_sequence", initialValue = 10000, allocationSize = 1)
+@SequenceGenerator(name = "profile_sequence_generator", sequenceName = "trn_profile_sequence", initialValue = 10000, allocationSize = 1)
 public class Profile extends BaseDomain {
 
 	private static final long serialVersionUID = 1L;

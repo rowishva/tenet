@@ -20,7 +20,8 @@ public class AutoPopulateEvent {
 	@EventListener
 	public void appReady(ApplicationReadyEvent event) {
 		LOGGER.debug("Calling AutoPopulateEvent.appReady()");
-		service.init();
+		// service.init();
+		LOGGER.debug("==================TENET SFX==================");
 	}
 
 }
