@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tenet.web.rest.admin.dto.MassCoreTeamDTO;
 import com.tenet.web.rest.admin.service.MassCoreTeamService;
 import com.tenet.web.rest.common.ServiceEndpoints;
 import com.tenet.web.rest.common.dto.response.BaseResponse;
 import com.tenet.web.rest.common.dto.response.BaseResponsePage;
 import com.tenet.web.rest.common.specification.CoreTeamSerachSpec;
-import com.tenet.web.rest.profile.dto.MassCoreTeamDTO;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

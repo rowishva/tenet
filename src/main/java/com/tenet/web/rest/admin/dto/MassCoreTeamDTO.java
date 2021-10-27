@@ -1,4 +1,4 @@
-package com.tenet.web.rest.profile.dto;
+package com.tenet.web.rest.admin.dto;
 
 import java.io.Serializable;
 
@@ -8,8 +8,9 @@ public class MassCoreTeamDTO implements Serializable {
 
 	private long id;
 	private String fullName;
-	private String tag;
 	private String contactNumber;
+	private String tag;
+	private String prefix;
 	private int seatingNo;
 
 	public long getId() {
@@ -52,4 +53,11 @@ public class MassCoreTeamDTO implements Serializable {
 		this.seatingNo = seatingNo;
 	}
 
+	public String getPrefix() {
+		return prefix;
+	}
+
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
+	}
 }

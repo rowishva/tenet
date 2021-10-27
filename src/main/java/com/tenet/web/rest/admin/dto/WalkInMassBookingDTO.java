@@ -1,16 +1,15 @@
-package com.tenet.web.rest.profile.dto;
+package com.tenet.web.rest.admin.dto;
 
 import java.io.Serializable;
 
-public class MassBookingRes implements Serializable {
+public class WalkInMassBookingDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	private long id;
 	private String fullName;
 	private String contactNumber;
-	private String code;
-	private String tag;
+	private String prefix;
 	private int seatingNo;
 
 	public long getId() {
@@ -37,14 +36,6 @@ public class MassBookingRes implements Serializable {
 		this.contactNumber = contactNumber;
 	}
 
-	public String getTag() {
-		return tag;
-	}
-
-	public void setTag(String tag) {
-		this.tag = tag;
-	}
-
 	public int getSeatingNo() {
 		return seatingNo;
 	}
@@ -53,11 +44,12 @@ public class MassBookingRes implements Serializable {
 		this.seatingNo = seatingNo;
 	}
 
-	public String getCode() {
-		return code;
+	public String getPrefix() {
+		return prefix;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
 	}
+
 }

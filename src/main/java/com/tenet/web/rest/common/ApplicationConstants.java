@@ -18,6 +18,7 @@ public interface ApplicationConstants {
 	public static final String BEARER = "Bearer ";
 	public static final long TOKEN_VALIDITY = 1 * 60 * 60;
 	public static final String CORE_TEAM = "CORETEAM";
+	public static final String WALK_IN = "WALKIN";
 
 	public static final String ERROR_MSG_PROFILE_NOT_FOUND = "Profile Not Found, Invalid Id :";
 	public static final String ERROR_MSG_DEPENDENT_NOT_FOUND = "Dependent Not Found, Invalid Id :";

@@ -71,5 +71,6 @@ VALUES (1,'2021-07-14 09:45:06.863000','Admin','\0',NULL,'Admin',0,'SAN','SAN',1
 (28,'2021-07-14 09:45:06.863000','Admin','\0',NULL,'Admin',0,'BVM','PUBLIC', 32, 42, 11,'CarPark A');
 
 INSERT INTO `trn_mass_booking_sequence` VALUES (1000);
-INSERT INTO `trn_mass_booking_no` VALUES (1000);
 
+INSERT INTO `trn_sequence_data` (`sequence_name`,`sequence_increment`,`sequence_min_value`,`sequence_max_value`,`sequence_cur_value`,`sequence_cycle`)
+VALUES ('trn_mass_booking_no',1,1000,18446744073709551615,1000,0);

@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS `mst_community_allocation`;
 DROP TABLE IF EXISTS `mst_global_parameter`;
 DROP TABLE IF EXISTS `mst_seating_category`;
 DROP TABLE IF EXISTS `mst_seating_prefix`;
+DROP TABLE IF EXISTS `trn_sequence_data`;
 
 --Drop sequence --
 DROP TABLE IF EXISTS `trn_dependent_sequence`;
@@ -17,10 +18,6 @@ DROP TABLE IF EXISTS `trn_profile_sequence`;
 DROP TABLE IF EXISTS `trn_mass_time_sequence`;
 DROP TABLE IF EXISTS `trn_mass_booking_sequence`;
 DROP TABLE IF EXISTS `trn_mass_booking_category_sequence`;
-DROP TABLE IF EXISTS `trn_mass_booking_no`;
-
---Drop Function --
-DROP FUNCTION IF EXISTS `fnt_mass_booking`;
 
 --Create sequence --
 CREATE TABLE `trn_dependent_sequence` (
@@ -36,10 +33,6 @@ CREATE TABLE `trn_mass_time_sequence` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `trn_mass_booking_sequence` (
-  `next_val` bigint DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-CREATE TABLE `trn_mass_booking_no` (
   `next_val` bigint DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -222,6 +215,16 @@ CREATE TABLE `trn_mass_booking_category` (
   KEY `FK_trn_mass_booking_category_mass_time_id` (`mass_time_id`),
   CONSTRAINT `FK_trn_mass_booking_category_mass_time_id` FOREIGN KEY (`mass_time_id`) REFERENCES `trn_mass_time` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `trn_sequence_data` (
+  `sequence_name` varchar(100) NOT NULL,
+  `sequence_increment` int unsigned NOT NULL DEFAULT '1',
+  `sequence_min_value` int unsigned NOT NULL DEFAULT '1',
+  `sequence_max_value` bigint unsigned NOT NULL DEFAULT '18446744073709551615',
+  `sequence_cur_value` bigint unsigned DEFAULT '1',
+  `sequence_cycle` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`sequence_name`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /**
 DELIMITER $$

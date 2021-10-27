@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.tenet.web.rest.admin.dto.MassCoreTeamDTO;
 import com.tenet.web.rest.admin.service.MassCoreTeamService;
 import com.tenet.web.rest.common.ApplicationConstants;
 import com.tenet.web.rest.common.dto.response.BaseResponse;
@@ -28,7 +29,6 @@ import com.tenet.web.rest.common.repository.MassBookingCategoryRepository;
 import com.tenet.web.rest.common.repository.MassBookingRepository;
 import com.tenet.web.rest.common.repository.MassTimeRepository;
 import com.tenet.web.rest.common.specification.CoreTeamSerachSpec;
-import com.tenet.web.rest.profile.dto.MassCoreTeamDTO;
 
 @Service
 public class MassCoreTeamServiceImpl implements MassCoreTeamService {

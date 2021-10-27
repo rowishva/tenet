@@ -15,6 +15,7 @@ public final class ServiceEndpoints {
 	public static final String PROFILE_FORGOT_PASSWORD_OTP_VERIFICATION = "forgot/password/otp/verification/{username}/{otp}";
 	public static final String ADMIN_MASS_TIME = "admin/masstime";
 	public static final String ADMIN_MASS_CORE_TEAM = "admin/masscoreteam";
+	public static final String ADMIN_WALK_IN_MASS_BOOKING = "admin/walkinmassbooking";
 	public static final String ADMIN_COMMUNITY_ALLOCATION = "admin/communityallocation";
 	public static final String ADMIN_SEATING_CATEGORY = "admin/seatingcategory";
 	public static final String ADMIN_SEATING_PREFIX = "admin/seatingprefix";
