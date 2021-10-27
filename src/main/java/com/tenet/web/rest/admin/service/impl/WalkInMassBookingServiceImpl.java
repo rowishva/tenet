@@ -62,6 +62,9 @@ public class WalkInMassBookingServiceImpl implements WalkInMassBookingService {
 		massBooking.setContactNumber(request.getContactNumber());
 		massBooking.setMassBookingNo(ApplicationConstants.WALK_IN);
 		massBooking.setBooked(true);
+		if(request.isAttendance()) {
+			massBooking.setAttendance(request.isAttendance());
+		}
 		massBookingRepository.save(massBooking);
 
 		WalkInMassBookingDTO walkInMassBookingDTO = modelMapper.map(massBooking, WalkInMassBookingDTO.class);
@@ -97,6 +100,7 @@ public class WalkInMassBookingServiceImpl implements WalkInMassBookingService {
 		massBooking.setFullName("");
 		massBooking.setContactNumber("");
 		massBooking.setBooked(false);
+		massBooking.setAttendance(false);
 		massBookingRepository.save(massBooking);
 		BaseResponse<WalkInMassBookingDTO> response = new BaseResponse<WalkInMassBookingDTO>(
 				HttpStatus.NO_CONTENT.value(), ApplicationConstants.SUCCESS);

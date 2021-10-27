@@ -9,9 +9,9 @@ public class MassBookingRes implements Serializable {
 	private long id;
 	private String fullName;
 	private String contactNumber;
-	private String code;
-	private String tag;
+	private String prefix;
 	private int seatingNo;
+	private boolean attendance;
 
 	public long getId() {
 		return id;
@@ -37,14 +37,6 @@ public class MassBookingRes implements Serializable {
 		this.contactNumber = contactNumber;
 	}
 
-	public String getTag() {
-		return tag;
-	}
-
-	public void setTag(String tag) {
-		this.tag = tag;
-	}
-
 	public int getSeatingNo() {
 		return seatingNo;
 	}
@@ -53,11 +45,20 @@ public class MassBookingRes implements Serializable {
 		this.seatingNo = seatingNo;
 	}
 
-	public String getCode() {
-		return code;
+	public String getPrefix() {
+		return prefix;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
 	}
+
+	public boolean isAttendance() {
+		return attendance;
+	}
+
+	public void setAttendance(boolean attendance) {
+		this.attendance = attendance;
+	}
+
 }

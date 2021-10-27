@@ -11,6 +11,7 @@ public class WalkInMassBookingDTO implements Serializable {
 	private String contactNumber;
 	private String prefix;
 	private int seatingNo;
+	private boolean attendance;
 
 	public long getId() {
 		return id;
@@ -50,6 +51,14 @@ public class WalkInMassBookingDTO implements Serializable {
 
 	public void setPrefix(String prefix) {
 		this.prefix = prefix;
+	}
+
+	public boolean isAttendance() {
+		return attendance;
+	}
+
+	public void setAttendance(boolean attendance) {
+		this.attendance = attendance;
 	}
 
 }
