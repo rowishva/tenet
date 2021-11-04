@@ -85,7 +85,7 @@ public class ProfileServiceImpl implements ProfileService {
 		profile.setOtp(otp);
 		Profile profileSaved = profileRepository.save(profile);
 		LOGGER.debug("Sending Email with OTP");
-		sendEmail(profile.getFullName(), profile.getUsername(), otp, 1);
+		// sendEmail(profile.getFullName(), profile.getUsername(), otp, 1);
 		ProfileDTO profileDTO = modelMapper.map(profileSaved, ProfileDTO.class);
 		BaseResponse<ProfileDTO> response = new BaseResponse<ProfileDTO>(HttpStatus.CREATED.value(),
 				ApplicationConstants.SUCCESS, profileDTO);

@@ -15,10 +15,6 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-
-import com.tenet.web.rest.auth.service.AuthUserDetails;
 
 @MappedSuperclass
 public class BaseDomain implements Serializable {
@@ -53,13 +49,13 @@ public class BaseDomain implements Serializable {
 	@PrePersist
 	public void onPrePersist() {
 		this.createTime = new Date();
-		this.createdByUser = "SYSTEM";	
+		this.createdByUser = "SYSTEM";
 	}
 
 	@PreUpdate
 	public void onPreUpdate() {
 		this.updateTime = new Date();
-		this.updatedByUser = "SYSTEM";		
+		this.updatedByUser = "SYSTEM";
 	}
 
 	public Date getCreateTime() {

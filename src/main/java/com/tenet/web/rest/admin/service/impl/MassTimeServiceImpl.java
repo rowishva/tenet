@@ -20,9 +20,11 @@ import com.tenet.web.rest.admin.service.MassTimeService;
 import com.tenet.web.rest.common.ApplicationConstants;
 import com.tenet.web.rest.common.dto.response.BaseResponse;
 import com.tenet.web.rest.common.dto.response.BaseResponsePage;
+import com.tenet.web.rest.common.entity.GlobalParameter;
 import com.tenet.web.rest.common.entity.MassTime;
 import com.tenet.web.rest.common.exception.ResourceAlreadyExistsException;
 import com.tenet.web.rest.common.exception.ResourceNotFoundException;
+import com.tenet.web.rest.common.repository.GlobalParameterRepository;
 import com.tenet.web.rest.common.repository.MassTimeRepository;
 import com.tenet.web.rest.common.specification.MassTimeSerachSpec;
 
@@ -40,6 +42,9 @@ public class MassTimeServiceImpl implements MassTimeService {
 	@Autowired
 	private AutoPopulateService autoPopulateService;
 
+	@Autowired
+	private GlobalParameterRepository globalParameterRepository;
+
 	@Override
 	@Transactional
 	public BaseResponse<MassTimeDTO> createMassTime(MassTimeDTO request) {
@@ -50,7 +55,10 @@ public class MassTimeServiceImpl implements MassTimeService {
 			throw new ResourceAlreadyExistsException(
 					ApplicationConstants.ERROR_MSG_MASSTIME_FOUND + request.getDate() + request.getTime());
 		}
+		GlobalParameter globalParameter = globalParameterRepository.findByCode("TC");
+		int totalCapacity = Integer.parseInt(globalParameter.getValue());
 		MassTime massTime = modelMapper.map(request, MassTime.class);
+		massTime.setTotalCapacity(totalCapacity);
 		massTime = massTimeRepository.save(massTime);
 		LOGGER.debug("Calling MassTimeServiceImpl.createMassTime().autoPopulateService");
 		autoPopulateService.initMassBooking(massTime);

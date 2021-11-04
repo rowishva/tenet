@@ -62,7 +62,7 @@ public class WalkInMassBookingServiceImpl implements WalkInMassBookingService {
 		massBooking.setContactNumber(request.getContactNumber());
 		massBooking.setMassBookingNo(ApplicationConstants.WALK_IN);
 		massBooking.setBooked(true);
-		if(request.isAttendance()) {
+		if (request.isAttendance()) {
 			massBooking.setAttendance(request.isAttendance());
 		}
 		massBookingRepository.save(massBooking);

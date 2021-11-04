@@ -22,6 +22,7 @@ public final class ServiceEndpoints {
 	public static final String ADMIN_PROFILE = "admin/profile";
 	public static final String CHANGEROLE = "/changerole/{profileid}/{torolecode}";
 	public static final String ADMIN_GLOBAL_PARAMETER = "admin/globalparameter";
+	public static final String ADMIN_REPORT_EXCEL = "admin/report/excel";
 
 	public static final String ID = "/{id}";
 	public static final String DEPENDENT_ID = "/{dependentId}";

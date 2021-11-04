@@ -1,5 +1,8 @@
 package com.tenet.web.rest.common;
 
+import java.util.AbstractMap;
+import java.util.Map;
+
 public interface ApplicationConstants {
 
 	public static final String SUCCESS = "SUCCESS";
@@ -19,6 +22,7 @@ public interface ApplicationConstants {
 	public static final long TOKEN_VALIDITY = 1 * 60 * 60;
 	public static final String CORE_TEAM = "CORETEAM";
 	public static final String WALK_IN = "WALKIN";
+	public static final String EMPTY_STRING = "";
 
 	public static final String ERROR_MSG_PROFILE_NOT_FOUND = "Profile Not Found, Invalid Id :";
 	public static final String ERROR_MSG_DEPENDENT_NOT_FOUND = "Dependent Not Found, Invalid Id :";
@@ -47,4 +51,17 @@ public interface ApplicationConstants {
 	public static final String ERROR_MSG_NOT_ENOUGH_CAPACITY = "Not enough capacity, Available Capacity only : ";
 	public static final String ERROR_MSG_MASSBOOKING_NOT_FOUND = "Mass Booking Not Found, Invalid Id :";
 
+	public static Map<String, String> TAG_DESCRIPTION = Map.ofEntries(
+			new AbstractMap.SimpleEntry<String, String>("CARE", "Caretaker"),
+			new AbstractMap.SimpleEntry<String, String>("HM", "Hospitality Minister"),
+			new AbstractMap.SimpleEntry<String, String>("SNR", "Elderly"),
+			new AbstractMap.SimpleEntry<String, String>("RT", "Registration Team"),
+			new AbstractMap.SimpleEntry<String, String>("LEC", "Lector"),
+			new AbstractMap.SimpleEntry<String, String>("EMOHC", "EMOHC"),
+			new AbstractMap.SimpleEntry<String, String>("SAN", "Priest & Alterboys"),
+			new AbstractMap.SimpleEntry<String, String>("MM", "Choir & Organist"),
+			new AbstractMap.SimpleEntry<String, String>("AV", "Audio Video"),
+			new AbstractMap.SimpleEntry<String, String>("MC", "MC"),
+			new AbstractMap.SimpleEntry<String, String>("PUBLIC", "Public"),
+			new AbstractMap.SimpleEntry<String, String>("WCB", "WCB"));
 }

@@ -33,4 +33,7 @@ public interface MassBookingRepository extends JpaRepository<MassBooking, Long>,
 	@Query(value = "SELECT * from trn_mass_booking mb where mb.mass_time_id=?1 and mb.mass_booking_no = 'WALKIN' and mb.booked is true ORDER BY mb.seating_no", nativeQuery = true)
 	List<MassBooking> findByWalkInList(long massTimeId);
 
+	@Query(value = "SELECT * from trn_mass_booking mb where mb.mass_time_id=?1 and mb.booked is true ORDER BY mb.seating_no asc", nativeQuery = true)
+	List<MassBooking> findByMassTimeId(long massTimeId);
+
 }
